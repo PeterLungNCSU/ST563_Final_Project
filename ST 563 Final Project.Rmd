@@ -13,7 +13,6 @@ library(caret)
 library(rsample)
 library(kableExtra)
 library(splines)
-library(cvTools)
 ```
 
 
@@ -60,6 +59,13 @@ We are also interested in testing which variables have nonlinear effects and mod
 This section will detail the methodologies and evaluations used for each type of model tested.
 
 ### Exploratory Data Analysis
+#Check out the dataset
+head(day)
+dim(day)
+
+#Mapping the amount of cnt based on 4 seasons, coloring points by weather conditions
+ggplot(day,aes(cnt,season,color=weathersit)) + geom_point()
+
 
 
 ### Lasso Regression
