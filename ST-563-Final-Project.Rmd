@@ -71,6 +71,7 @@ This section will detail the methodologies and evaluations used for each type of
 #Check out the dataset
 head(day)
 dim(day)
+#Mapping the amount of cnt based on 4 seasons, coloring points by weather conditions
 ggplot(day,aes(cnt,season,color=weathersit)) + geom_point()
 
 library(corrmorant)
@@ -82,8 +83,6 @@ ggcorrm(data = day[,c(3, 7:14)]) +
 ```
 
 Based on the correlation plot, the upper triangle shows the correlation strength that temp(0.63), atemp(0.63) and Season(0.41) have strong correlation with the response variable(cnt). At the same time, the lower triangle scatter plot tells that when weathersit equal to 3 there might be some correlations there can be analysed. 
-
-#Mapping the amount of cnt based on 4 seasons, coloring points by weather conditions
 
 
 ### Lasso Regression
