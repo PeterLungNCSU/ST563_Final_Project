@@ -14,6 +14,7 @@ library(rsample)
 library(kableExtra)
 library(splines)
 library(cvTools)
+
 ```
 
 
@@ -60,13 +61,29 @@ We are also interested in testing which variables have nonlinear effects and mod
 This section will detail the methodologies and evaluations used for each type of model tested.
 
 ### Exploratory Data Analysis
+
+```{r}
+#Required: install remotes package 
+#install.packages("remotes")
+# install corrmorant from the github repository
+#remotes::install_github("r-link/corrmorant")
+
 #Check out the dataset
 head(day)
 dim(day)
-
-#Mapping the amount of cnt based on 4 seasons, coloring points by weather conditions
 ggplot(day,aes(cnt,season,color=weathersit)) + geom_point()
 
+library(corrmorant)
+ggcorrm(data = day[,c(3, 7:14)]) +
+  lotri(geom_point(alpha = 0.5)) +
+  utri_corrtext() +
+  dia_names(y_pos = 0.15, size = 3) +
+  dia_density(lower = 0.3, fill = "grey80", color = 1)
+```
+
+Based on the correlation plot, the upper triangle shows the correlation strength that temp(0.63), atemp(0.63) and Season(0.41) have strong correlation with the response variable(cnt). At the same time, the lower triangle scatter plot tells that when weathersit equal to 3 there might be some correlations there can be analysed. 
+
+#Mapping the amount of cnt based on 4 seasons, coloring points by weather conditions
 
 
 ### Lasso Regression
