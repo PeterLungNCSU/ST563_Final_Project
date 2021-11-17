@@ -13,6 +13,7 @@ library(caret)
 library(rsample)
 library(kableExtra)
 library(splines)
+library(cvTools)
 ```
 
 
@@ -20,7 +21,7 @@ library(splines)
 \newpage
 
 ```{r Split, include = FALSE}
-setwd("C:/Users/rm915/Desktop/ST 563")
+setwd("C:/Users/ycai11/Documents/")
 day <- read_csv("day.csv")
 day <- day %>% select(-registered, -casual)
 
@@ -59,13 +60,24 @@ We are also interested in testing which variables have nonlinear effects and mod
 This section will detail the methodologies and evaluations used for each type of model tested.
 
 ### Exploratory Data Analysis
+```{r}
 #Check out the dataset
 head(day)
 dim(day)
-
-#Mapping the amount of cnt based on 4 seasons, coloring points by weather conditions
 ggplot(day,aes(cnt,season,color=weathersit)) + geom_point()
 
+library(corrmorant)
+ggcorrm(data = day[,c(3, 7:14)]) +
+  lotri(geom_point(alpha = 0.5)) +
+  utri_corrtext() +
+  dia_names(y_pos = 0.15, size = 3) +
+  dia_density(lower = 0.3, fill = "grey80", color = 1)
+```
+
+
+some analysis
+
+#Mapping the amount of cnt based on 4 seasons, coloring points by weather conditions
 
 
 ### Lasso Regression
