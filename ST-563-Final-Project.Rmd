@@ -26,7 +26,7 @@ library(fastDummies)
 ```{r Split, include = FALSE}
 # read in data
 day <- read_csv("day.csv")
-day <- day %>% select(-registered, -casual, -dteday)
+day <- day %>% select(-registered, -casual)
 
 # scale continuous variables
 day_scaled <- day %>% select(temp, atemp, hum, windspeed)
@@ -75,6 +75,30 @@ This section will detail the methodologies and evaluations used for each type of
 ### Exploratory Data Analysis
 
 
+```{r}
+#Required: install remotes package 
+#install.packages("remotes")
+# install corrmorant from the github repository
+#remotes::install_github("r-link/corrmorant")
+
+#Check out the dataset
+head(day)
+dim(day)
+#Mapping the amount of cnt based on 4 seasons, coloring points by weather conditions
+ggplot(day,aes(cnt,season,color=weathersit)) + geom_point()
+
+library(corrmorant)
+ggcorrm(data = day[,c(3, 7:14)]) +
+  lotri(geom_point(alpha = 0.5)) +
+  utri_corrtext() +
+  dia_names(y_pos = 0.15, size = 3) +
+  dia_density(lower = 0.3, fill = "grey80", color = 1)
+```
+
+Based on the correlation plot, the upper triangle shows the correlation strength that temp(0.63), atemp(0.63) and Season(0.41) have strong correlation with the response variable(cnt). At the same time, the lower triangle scatter plot tells that when weathersit equal to 3 there might be some correlations there can be analysed. 
+
+
+
 ### Lasso Regression
 
 
@@ -89,6 +113,7 @@ $$y_i = \beta_0 + \beta_1 x_i + \beta_2 x_i^2 + \beta_3 x_i^3 + \sum_{k = 1}^K \
 Where the summation represents as series of $K$ terms that capture nonlinear effects at different intervals of the predictor variable.
 
 #### Model Selection
+
 
 
 \newpage
@@ -106,12 +131,19 @@ Solving this equation minimizes residual sum of squares while preventing the $\b
 We will tune the hyperparameter, $\lambda$ using 5-fold cross-validation. 
 
 
+
+### Ridge Regression
+
+
+#### Variable Selection Methods
+
+
 #### Splines to Capture Nonlinear Effects
 
 #### Model Selection
 
 
-\newpage
+
 ### Principal Components Analysis
 
 The third method we utilize for prediction is Principal Components Regression. PCR is an unsupervised dimension reduction technique which seeks to draw the maximum variation from each candidate variable into individual components. In this model, we will attempt to achieve minimum test error by selecting a subset of the data in the form of the first $k$ components. 
@@ -136,6 +168,7 @@ Seasonal categorical variables will be added to the regression analysis along wi
 The first step is to perform PCA on the four continuous variables. Each variable is both scaled and centered in preparation for entering the principal components procedure. This ensures that each variable has comparable variability with the others.
 
 Since each variable is standardized, the total variation in the predictors is simple the number of predictors, which is 4. The following table displays the proportion of the variance from each of the four principal components as well as the cumulative variance.
+
 
 ```{r PCA, include = FALSE, cache = TRUE}
 Xstd <- train_set %>% select(temp, atemp, hum, windspeed)
@@ -219,8 +252,6 @@ All other variables are allowed into the model specification.
 
 
 ## Appendix
-
-
 
 ```{r PCA_CV_Code, echo = FALSE, fig.width = 3.5, fig.height = 1.75, cache = TRUE}
 PC1_df <- c(rep(2, 625), rep(4, 625), rep(6, 625), rep(8, 625), rep(10, 625))
@@ -348,6 +379,7 @@ df_vec3 <- Grid3 %>% filter(RMSE == min(Grid3$RMSE))
 
 ```{r ref.label=knitr::all_labels(), echo = T, eval = F}
 ```
+
 
 
 
