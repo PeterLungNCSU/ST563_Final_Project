@@ -14,6 +14,9 @@ library(rsample)
 library(kableExtra)
 library(splines)
 library(cvTools)
+library(glmnet)
+library(fastDummies)
+
 ```
 
 
@@ -21,12 +24,22 @@ library(cvTools)
 \newpage
 
 ```{r Split, include = FALSE}
-setwd("C:/Users/rm915/Desktop/ST 563")
+# read in data
 day <- read_csv("day.csv")
-day <- day %>% select(-registered, -casual)
+day <- day %>% select(-registered, -casual, -dteday)
 
+# scale continuous variables
+day_scaled <- day %>% select(temp, atemp, hum, windspeed)
+day_scaled <- scale(day_scaled, center = TRUE, scale = TRUE)
+
+# create dummy variables for indicator variables
+dummyCols <- c('season', 'yr', 'mnth', 'weekday', 'weathersit')
+day_scaled <- dummy_cols(day, select_columns = dummyCols)
+#day_scaled <- day_scaled %>% select(-dummyCols) # remove original indicator vars
+
+# test train split
 set.seed(54321)
-index <- initial_split(day, prop = 0.75)
+index <- initial_split(day_scaled, prop = 0.75)
 train_set <- training(index)
 test_set <- testing(index)
 
@@ -78,18 +91,27 @@ Where the summation represents as series of $K$ terms that capture nonlinear eff
 #### Model Selection
 
 
-
+\newpage
 ### Ridge Regression
 
+The second method that will be utilized for prediction is Ridge Regression. This method is recommneded for data with
+visible multi-colinearity as it seeks to minimize the following equation:
 
-#### Variable Selection Methods
+\[ \sum_{i} (Y_i-X_{i1}\beta_{1}-...-X_{ip}\beta_{p})^2 + \lambda \sum_{j=1}^p \beta_{j}^{2} \]
+
+Solving this equation minimizes residual sum of squares while preventing the $\beta$'s from becoming too large. The amount of 'shrinkage' applied to the $\beta$'s is controlled by the hyperparameter $\lambda$. A small value of $\lambda$ will virtually allow the coefficients to grow very large. Inversely, A large value of $\lambda$ will reduce the coefficients closer to zero.
+
+#### Hyperparameter Tuning
+
+We will tune the hyperparameter, $\lambda$ using 5-fold cross-validation. 
+
 
 #### Splines to Capture Nonlinear Effects
 
 #### Model Selection
 
 
-
+\newpage
 ### Principal Components Analysis
 
 The third method we utilize for prediction is Principal Components Regression. PCR is an unsupervised dimension reduction technique which seeks to draw the maximum variation from each candidate variable into individual components. In this model, we will attempt to achieve minimum test error by selecting a subset of the data in the form of the first $k$ components. 
@@ -115,9 +137,9 @@ The first step is to perform PCA on the four continuous variables. Each variable
 
 Since each variable is standardized, the total variation in the predictors is simple the number of predictors, which is 4. The following table displays the proportion of the variance from each of the four principal components as well as the cumulative variance.
 
-```{r PCA, include = FALSE}
-X <- train_set %>% select(temp, atemp, hum, windspeed)
-Xstd <- scale(X, center = TRUE, scale = TRUE)
+```{r PCA, include = FALSE, cache = TRUE}
+Xstd <- train_set %>% select(temp, atemp, hum, windspeed)
+#Xstd <- scale(X, center = TRUE, scale = TRUE)
 
 pc_out <- prcomp(Xstd)
 names(pc_out)
@@ -135,7 +157,7 @@ As can be seen in the table, 80% of the variation in the predictors is captured 
 
 Although the dimensionality of the data is successfully reduced, the relationship between the components and the response variable determine the overall quality of the model. The following scatterplots show the relationship between each component and the response in the training data:
 
-```{r PCA_scatter, echo = FALSE, fig.width = 3.5, fig.height = 1.75}
+```{r PCA_scatter, echo = FALSE, fig.width = 3.5, fig.height = 1.75, cache = TRUE}
 pca_train <- cbind(train_set, data.frame(Z)) %>% select(-temp, -atemp, -hum, -windspeed)
 
 ggplot(data = pca_train, aes(x = PC1, y = cnt)) + geom_point(color = "steelblue", size = 0.25) + 
@@ -198,7 +220,9 @@ All other variables are allowed into the model specification.
 
 ## Appendix
 
-```{r PCA_CV_Code, echo = FALSE, fig.width = 3.5, fig.height = 1.75}
+
+
+```{r PCA_CV_Code, echo = FALSE, fig.width = 3.5, fig.height = 1.75, cache = TRUE}
 PC1_df <- c(rep(2, 625), rep(4, 625), rep(6, 625), rep(8, 625), rep(10, 625))
 PC2_df <- c(rep(2, 125), rep(4, 125), rep(6, 125), rep(8, 125), rep(10, 125))
 PC3_df <- c(rep(2,  25), rep(4,  25), rep(6,  25), rep(8,  25), rep(10,  25))
@@ -322,8 +346,8 @@ df_vec3 <- Grid3 %>% filter(RMSE == min(Grid3$RMSE))
 
 ## References
 
-
-
+```{r ref.label=knitr::all_labels(), echo = T, eval = F}
+```
 
 
 
