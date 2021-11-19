@@ -3,11 +3,14 @@ title: "ST 563 Final Project - Bike Sharing Data"
 author: "Peter Lung, David Shaw, Yijia Cai"
 subtitle: "Team #1"
 date: "11/4/2021"
-output: pdf_document
+output: 
+  pdf_document:
+    toc: true
+    toc_depth: 4
 ---
 
 ```{r setup, include = FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 library(tidyverse)
 library(caret)
 library(rsample)
@@ -16,7 +19,8 @@ library(splines)
 library(cvTools)
 library(glmnet)
 library(fastDummies)
-
+library(ggrepel)
+library(Metrics)
 ```
 
 
@@ -126,24 +130,61 @@ visible multi-colinearity as it seeks to minimize the following equation:
 
 Solving this equation minimizes residual sum of squares while preventing the $\beta$'s from becoming too large. The amount of 'shrinkage' applied to the $\beta$'s is controlled by the hyperparameter $\lambda$. A small value of $\lambda$ will virtually allow the coefficients to grow very large. Inversely, A large value of $\lambda$ will reduce the coefficients closer to zero.
 
-#### Hyperparameter Tuning
+#### Hyperparameter Tuning:
 
-We will tune the hyperparameter, $\lambda$ using 5-fold cross-validation. 
+We will tune the hyperparameter, $\lambda$ using 5-fold cross-validation. The predictors we will include in training are all scaled continuous variables and all indicator variables originally created. The response variable will be the count of bike rentals. We will test lambda values between $10^{-2}$ and $10^{10}$.
 
+Below, we see a plot showing how the coefficients of the regression models transform as we change the value of lambda. Initially, `temp` and `atemp`, two variables that have been identified as being highly correlated, have wildly differing coefficients. However, as we increase our hyperparameter, these two coefficients grow closer to each other, fixing our issue of multicollinearity. Similarly, `hum` (humidity) and `weathersit_3` (Light Snow, Light Rain + Thunderstorm + Scattered clouds, Light Rain + Scattered clouds) are correlated but show varying regression coefficients for low values af lambda. But, as we increase lambda, the coefficients of these two correlated variables become much more similar. 
 
+```{r ridgeReg1, fig.width = 8, fig.height = 4, echo=FALSE, cache=TRUE}
+# create datastructures for tuning process
+y_train <- train_set$cnt
+X_train <- as.matrix(train_set %>% select(-c('cnt', 'dteday')))
 
-### Ridge Regression
+# create grid of potential hyperparam values, train model for each value using 5-fold cv
+grid <- 10^seq(-2, 10, length = 100)
+cv_out <- cv.glmnet(x = X_train, y = y_train,
+                    type.measure='mse',
+                    nfolds = 5,
+                    alpha = 0,
+                    lambda = grid)
 
+# create plot to show how beta's are affected by tuning param
+## retreived from https://stackoverflow.com/questions/36656752/plotting-cv-glmnet-in-r
+betas = as.matrix(cv_out$glmnet.fit$beta)
+lambdas = cv_out$lambda
+names(lambdas) = colnames(betas)
+coefPlot <- as.data.frame(betas) %>% 
+              tibble::rownames_to_column("variable") %>% 
+              pivot_longer(-variable) %>% 
+              mutate(lambda=lambdas[name]) %>% 
+              ggplot(aes(x=lambda,y=value,col=variable)) + 
+              geom_line() + 
+              geom_label_repel(data=~subset(.x,lambda==min(lambda)),
+              aes(label=variable),nudge_x=-0.5) +
+              scale_x_log10()
+coefPlot
+```
+Next we will examine the plot of lambda values vs MSE as seen below. The left-most dashed vertical line represents the minimum MSE value. This value is often considered the 'best' value of lambda but often times leads to overfitting. Therefore, we will select our 'optimal' lambda as the lambda value within 1 standard error of the minimum MSE lambda to reduce variance in our predictions. This value is displayed on the plot as the right-most dashed vertical line.
 
-#### Variable Selection Methods
+```{r ridgeReg2, fig.width = 8, fig.height = 4, results='hide',fig.keep='all', echo=FALSE, cache=TRUE}
+# display the output of 5-fold cv for ridge regression comparing MSE to lambdas
+lambdaPlot <- plot(cv_out)
+lambdaPlot
+```
 
+The optimal value of $\lambda$ is `r round(cv_out$lambda.1se, 3)`
 
 #### Splines to Capture Nonlinear Effects
 
 #### Model Selection
 
+```{r}
+y_train <- test_set$cnt
+X_test <- as.matrix(test_set %>% select(-c('cnt', 'dteday')))
+```
 
-
+\newpage
 ### Principal Components Analysis
 
 The third method we utilize for prediction is Principal Components Regression. PCR is an unsupervised dimension reduction technique which seeks to draw the maximum variation from each candidate variable into individual components. In this model, we will attempt to achieve minimum test error by selecting a subset of the data in the form of the first $k$ components. 

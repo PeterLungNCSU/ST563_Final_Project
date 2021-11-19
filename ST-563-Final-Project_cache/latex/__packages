@@ -17,3 +17,6 @@ cvTools
 Matrix
 glmnet
 fastDummies
+ggrepel
+corrmorant
+Metrics
