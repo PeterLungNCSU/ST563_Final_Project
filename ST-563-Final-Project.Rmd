@@ -113,9 +113,9 @@ Lasso estimates of $\beta_{j}$ by minimizing residual sum of squares for $\lambd
 
 
 ```{r}
-xtrain=model.matrix(cnt~., train_set)[,-1]
+xtrain=model.matrix(cnt~. -1, train_set[,-c(1:9)])
 ytrain=train_set$cnt
-xtest=model.matrix(cnt~., test_set)[,-1]
+xtest=model.matrix(cnt~. -1, test_set[,-c(1:9)])
 ytest=test_set$cnt
 
 #Fit a lasso model on the training set
