@@ -105,6 +105,28 @@ Based on the correlation plot, the upper triangle shows the correlation strength
 
 ### Lasso Regression
 
+Lasso as a shrinkage method uses a penalty term involving sum of the absolute values of the regression coefficients.
+
+\[ \sum_{i} (Y_i-X_{i1}\beta_{1}-...-X_{ip}\beta_{p})^2 + \lambda \sum_{j=1}^p |\beta_{j}| \]
+
+Lasso estimates of $\beta_{j}$ by minimizing residual sum of squares for $\lambda>=0$
+
+xtrain=model.matrix(cnt~., train_set)[,-1]
+ytrain=train_set$cnt
+xtest=model.matrix(cnt~., test_set)[,-1]
+ytest=test_set$cnt
+
+#Fit a lasso model on the training set
+cv_lasso=cv.glmnet(xtrain,ytrain,alapha=1)
+plot(cv_lasso)
+#Find the best lambda and fit in training model
+lam=cv_lasso$lambda.min
+model=glmnet(xtrain,ytrain,alpha=1,lambda=lam)
+lam
+#Fit training model on test set to get test MSE
+pred=predict(model,s=lam,newx=xtest)
+MSE=mean((pred-ytest)^2)
+print(MSE)
 
 #### Variable Selection Methods
 
@@ -247,7 +269,7 @@ ggplot(data = pca_train, aes(x = PC4, y = cnt)) + geom_point(color = "steelblue"
   labs(title = "Scatterplot of Response and PC4", y = "Count of Bike Users", x = "PC4")
 
 ```
-
+ 
 The relationships between the individual components and the response are most pronounced in PC1 and PC2. PC1 looks like it may have a nonlinear effect on the response being somewhat flat on the low and high parts on the component and a positive relationship in between. The second component has what appears to be a negative effect on the response. The other two components don't appear to have any obvious relationship with Bike Sharing Counts based on the graph.
 
 
