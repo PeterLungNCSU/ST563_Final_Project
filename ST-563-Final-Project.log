@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2022/dev) (preloaded format=pdflatex 2021.10.6)  23 NOV 2021 10:40
+This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2022/dev) (preloaded format=pdflatex 2021.10.6)  23 NOV 2021 10:44
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -672,152 +672,169 @@ e pdf)
 Package pdftex.def Info: ST-563-Final-Project_files/figure-latex/edaSpline-1.pd
 f  used on input line 288.
 (pdftex.def)             Requested size: 469.75385pt x 234.8769pt.
-[4 <./ST-563-Final-Project_files/figure-latex/unnamed-chunk-1-2.pdf>] [5 <./ST-
-563-Final-Project_files/figure-latex/edaSpline-1.pdf>]
-<ST-563-Final-Project_files/figure-latex/ridgeReg1-1.pdf, id=186, 578.16pt x 28
+[4 <./ST-563-Final-Project_files/figure-latex/unnamed-chunk-1-2.pdf>]
+<ST-563-Final-Project_files/figure-latex/unnamed-chunk-2-1.pdf, id=166, 469.755
+pt x 325.215pt>
+File: ST-563-Final-Project_files/figure-latex/unnamed-chunk-2-1.pdf Graphic fil
+e (type pdf)
+<use ST-563-Final-Project_files/figure-latex/unnamed-chunk-2-1.pdf>
+Package pdftex.def Info: ST-563-Final-Project_files/figure-latex/unnamed-chunk-
+2-1.pdf  used on input line 318.
+(pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
+[5 <./ST-563-Final-Project_files/figure-latex/edaSpline-1.pdf>] [6 <./ST-563-Fi
+nal-Project_files/figure-latex/unnamed-chunk-2-1.pdf>] [7]
+<ST-563-Final-Project_files/figure-latex/ridgeReg1-1.pdf, id=202, 578.16pt x 28
 9.08pt>
 File: ST-563-Final-Project_files/figure-latex/ridgeReg1-1.pdf Graphic file (typ
 e pdf)
 <use ST-563-Final-Project_files/figure-latex/ridgeReg1-1.pdf>
 Package pdftex.def Info: ST-563-Final-Project_files/figure-latex/ridgeReg1-1.pd
-f  used on input line 357.
+f  used on input line 406.
 (pdftex.def)             Requested size: 469.75385pt x 234.8769pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 357--365
+Underfull \hbox (badness 10000) in paragraph at lines 406--414
 [][]
  []
 
-<ST-563-Final-Project_files/figure-latex/ridgeReg2-1.pdf, id=187, 578.16pt x 28
+<ST-563-Final-Project_files/figure-latex/ridgeReg2-1.pdf, id=203, 578.16pt x 28
 9.08pt>
 File: ST-563-Final-Project_files/figure-latex/ridgeReg2-1.pdf Graphic file (typ
 e pdf)
 <use ST-563-Final-Project_files/figure-latex/ridgeReg2-1.pdf>
 Package pdftex.def Info: ST-563-Final-Project_files/figure-latex/ridgeReg2-1.pd
-f  used on input line 366.
+f  used on input line 415.
 (pdftex.def)             Requested size: 469.75385pt x 234.8769pt.
-[6 <./ST-563-Final-Project_files/figure-latex/ridgeReg1-1.pdf>]
-<ST-563-Final-Project_files/figure-latex/ridgeReg3-1.pdf, id=200, 578.16pt x 28
+[8 <./ST-563-Final-Project_files/figure-latex/ridgeReg1-1.pdf>]
+<ST-563-Final-Project_files/figure-latex/ridgeReg3-1.pdf, id=216, 578.16pt x 28
 9.08pt>
 File: ST-563-Final-Project_files/figure-latex/ridgeReg3-1.pdf Graphic file (typ
 e pdf)
 <use ST-563-Final-Project_files/figure-latex/ridgeReg3-1.pdf>
 Package pdftex.def Info: ST-563-Final-Project_files/figure-latex/ridgeReg3-1.pd
-f  used on input line 384.
+f  used on input line 433.
 (pdftex.def)             Requested size: 469.75385pt x 234.8769pt.
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-[7 <./ST-563-Final-Project_files/figure-latex/ridgeReg2-1.pdf> <./ST-563-Final-
-Project_files/figure-latex/ridgeReg3-1.pdf>] [8pdfTeX warning (ext4): destinati
-on with the same identifier (name{table.1}) has been already used, duplicate ig
-nored
+[9 <./ST-563-Final-Project_files/figure-latex/ridgeReg2-1.pdf> <./ST-563-Final-
+Project_files/figure-latex/ridgeReg3-1.pdf>] [10pdfTeX warning (ext4): destinat
+ion with the same identifier (name{table.1}) has been already used, duplicate i
+gnored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.415 \newpage
+l.464 \newpage
               ]
 LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 4
-35.
+84.
 (/Users/williamshaw/Library/TinyTeX/texmf-dist/tex/latex/lm/ts1lmr.fd
 File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-<ST-563-Final-Project_files/figure-latex/PCA_scatter-1.pdf, id=225, 252.945pt x
+<ST-563-Final-Project_files/figure-latex/PCA_scatter-1.pdf, id=240, 252.945pt x
  126.4725pt>
 File: ST-563-Final-Project_files/figure-latex/PCA_scatter-1.pdf Graphic file (t
 ype pdf)
 <use ST-563-Final-Project_files/figure-latex/PCA_scatter-1.pdf>
 Package pdftex.def Info: ST-563-Final-Project_files/figure-latex/PCA_scatter-1.
-pdf  used on input line 480.
+pdf  used on input line 529.
 (pdftex.def)             Requested size: 252.94823pt x 126.4741pt.
-<ST-563-Final-Project_files/figure-latex/PCA_scatter-2.pdf, id=226, 252.945pt x
+<ST-563-Final-Project_files/figure-latex/PCA_scatter-2.pdf, id=241, 252.945pt x
  126.4725pt>
 File: ST-563-Final-Project_files/figure-latex/PCA_scatter-2.pdf Graphic file (t
 ype pdf)
 <use ST-563-Final-Project_files/figure-latex/PCA_scatter-2.pdf>
 Package pdftex.def Info: ST-563-Final-Project_files/figure-latex/PCA_scatter-2.
-pdf  used on input line 481.
+pdf  used on input line 530.
 (pdftex.def)             Requested size: 252.94823pt x 126.4741pt.
-<ST-563-Final-Project_files/figure-latex/PCA_scatter-3.pdf, id=227, 252.945pt x
+<ST-563-Final-Project_files/figure-latex/PCA_scatter-3.pdf, id=242, 252.945pt x
  126.4725pt>
 File: ST-563-Final-Project_files/figure-latex/PCA_scatter-3.pdf Graphic file (t
 ype pdf)
 <use ST-563-Final-Project_files/figure-latex/PCA_scatter-3.pdf>
 Package pdftex.def Info: ST-563-Final-Project_files/figure-latex/PCA_scatter-3.
-pdf  used on input line 482.
+pdf  used on input line 531.
 (pdftex.def)             Requested size: 252.94823pt x 126.4741pt.
-<ST-563-Final-Project_files/figure-latex/PCA_scatter-4.pdf, id=228, 252.945pt x
+<ST-563-Final-Project_files/figure-latex/PCA_scatter-4.pdf, id=243, 252.945pt x
  126.4725pt>
 File: ST-563-Final-Project_files/figure-latex/PCA_scatter-4.pdf Graphic file (t
 ype pdf)
 <use ST-563-Final-Project_files/figure-latex/PCA_scatter-4.pdf>
 Package pdftex.def Info: ST-563-Final-Project_files/figure-latex/PCA_scatter-4.
-pdf  used on input line 483.
+pdf  used on input line 532.
 (pdftex.def)             Requested size: 252.94823pt x 126.4741pt.
 
-Overfull \hbox (38.36365pt too wide) in paragraph at lines 480--484
+Overfull \hbox (38.36365pt too wide) in paragraph at lines 529--533
 [][] []
  []
 
 
-Overfull \hbox (38.36365pt too wide) in paragraph at lines 480--484
+Overfull \hbox (38.36365pt too wide) in paragraph at lines 529--533
 [] [] 
  []
 
-[9 <./ST-563-Final-Project_files/figure-latex/PCA_scatter-1.pdf> <./ST-563-Fina
-l-Project_files/figure-latex/PCA_scatter-2.pdf>] [10 <./ST-563-Final-Project_fi
-les/figure-latex/PCA_scatter-3.pdf> <./ST-563-Final-Project_files/figure-latex/
-PCA_scatter-4.pdf>]
+[11 <./ST-563-Final-Project_files/figure-latex/PCA_scatter-1.pdf> <./ST-563-Fin
+al-Project_files/figure-latex/PCA_scatter-2.pdf>] [12 <./ST-563-Final-Project_f
+iles/figure-latex/PCA_scatter-3.pdf> <./ST-563-Final-Project_files/figure-latex
+/PCA_scatter-4.pdf>]
 LaTeX Font Info:    Trying to load font information for TS1+lmtt on input line 
-594.
+643.
 (/Users/williamshaw/Library/TinyTeX/texmf-dist/tex/latex/lm/ts1lmtt.fd
 File: ts1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <10> not available
-(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 604.
+(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 653.
 
 LaTeX Font Warning: Font shape `T1/lmtt/bx/it' in size <10> not available
-(Font)              Font shape `T1/lmtt/b/sl' tried instead on input line 604.
-
-[11]
-Underfull \vbox (badness 10000) detected at line 870
- []
-
-
-Underfull \vbox (badness 10000) detected at line 870
- []
-
-[12]
-Underfull \vbox (badness 10000) detected at line 870
- []
-
-
-Underfull \vbox (badness 10000) detected at line 870
- []
+(Font)              Font shape `T1/lmtt/b/sl' tried instead on input line 653.
 
 [13]
-Underfull \vbox (badness 10000) detected at line 870
+Underfull \vbox (badness 10000) detected at line 935
  []
 
 
-Underfull \vbox (badness 10000) detected at line 870
+Underfull \vbox (badness 10000) detected at line 935
  []
 
 [14]
-Underfull \vbox (badness 10000) detected at line 870
+Underfull \vbox (badness 10000) detected at line 935
  []
 
 
-Underfull \vbox (badness 10000) detected at line 870
+Underfull \vbox (badness 10000) detected at line 935
  []
 
-[15] [16] (./ST-563-Final-Project.aux)
+[15]
+Underfull \vbox (badness 10000) detected at line 935
+ []
+
+
+Underfull \vbox (badness 10000) detected at line 935
+ []
+
+[16]
+Underfull \vbox (badness 10000) detected at line 935
+ []
+
+
+Underfull \vbox (badness 10000) detected at line 935
+ []
+
+[17]
+Underfull \vbox (badness 10000) detected at line 935
+ []
+
+
+Underfull \vbox (badness 10000) detected at line 935
+ []
+
+[18] [19] (./ST-563-Final-Project.aux)
 Package rerunfilecheck Info: File `ST-563-Final-Project.out' has not changed.
 (rerunfilecheck)             Checksum: 67CBA548821392B1A8CE410F9A7F22BA;3781.
  ) 
 Here is how much of TeX's memory you used:
- 12622 strings out of 480559
- 188399 string characters out of 5902367
- 559954 words of memory out of 5000000
- 29915 multiletter control sequences out of 15000+600000
+ 12632 strings out of 480559
+ 188862 string characters out of 5902367
+ 563212 words of memory out of 5000000
+ 29921 multiletter control sequences out of 15000+600000
  455337 words of font info for 74 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  60i,9n,66p,554b,469s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -825,8 +842,8 @@ Here is how much of TeX's memory you used:
 /Users/williamshaw/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}{/U
 sers/williamshaw/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/
 Users/williamshaw/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{
-/Users/williamshaw/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}
-{/Users/williamshaw/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}</U
+/Users/williamshaw/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/Us
+ers/williamshaw/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}</U
 sers/williamshaw/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></
 Users/williamshaw/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb><
 /Users/williamshaw/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmex10.pfb>
@@ -845,10 +862,10 @@ fb></Users/williamshaw/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtko10
 .pfb></Users/williamshaw/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt1
 0.pfb></Users/williamshaw/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt
 i10.pfb>
-Output written on ST-563-Final-Project.pdf (16 pages, 1729173 bytes).
+Output written on ST-563-Final-Project.pdf (19 pages, 1742104 bytes).
 PDF statistics:
- 399 PDF objects out of 1000 (max. 8388607)
- 318 compressed objects within 4 object streams
- 65 named destinations out of 1000 (max. 500000)
- 227 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 420 PDF objects out of 1000 (max. 8388607)
+ 334 compressed objects within 4 object streams
+ 68 named destinations out of 1000 (max. 500000)
+ 232 words of extra memory for PDF output out of 10000 (max. 10000000)
 
