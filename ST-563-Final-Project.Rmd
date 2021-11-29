@@ -157,26 +157,108 @@ Lasso as a shrinkage method uses a penalty term involving sum of the absolute va
 Lasso estimates of $\beta_{j}$ by minimizing residual sum of squares for $\lambda>=0$
 
 
-```{r}
-xtrain=model.matrix(cnt~. -1, train_set[,-c(1:9)])
-ytrain=train_set$cnt
-xtest=model.matrix(cnt~. -1, test_set[,-c(1:9)])
-ytest=test_set$cnt
+#### Hyperparameter Tuning:
 
-#Fit a lasso model on the training set
-cv_lasso=cv.glmnet(xtrain,ytrain,alapha=1)
-plot(cv_lasso)
-#Find the best lambda and fit in training model
-lam=cv_lasso$lambda.min
-model=glmnet(xtrain,ytrain,alpha=1,lambda=lam)
-lam
-#Fit training model on test set to get test MSE
-pred=predict(model,s=lam,newx=xtest)
-MSE=mean((pred-ytest)^2)
-print(MSE)
+
+Similar to the Ridge regression, we will see the coefficients of the variables change as the lambda increases of lasso regression based on the plot. The solution path selected variables: temp, yr, atemp, mnth_9,
+weathersit_3, season_1, hum, and windspeed. 
+Except atemp and temp looks highly correlated with each other, the variable yr is also related to atemp and temp which may causes multicollinearity. As lambda increases, the coefficients of all picked variables get closer eventually. 
+
+```{r}
+# create datastructures for tuning process
+y_train <- train_set$cnt
+X_train <- as.matrix(train_set %>% select(-c('cnt', 'dteday')))
+#X_train <- as.matrix(train_set[,-c(1:9)])
+
+# create grid of potential hyperparam values, train model for each value using 5-fold cv
+set.seed(54321)
+grid <- 2^seq(-6, 12, length = 100)
+cv_out1 <- cv.glmnet(x = X_train, y = y_train,
+                    type.measure='mse',
+                    nfolds = 5,
+                    alpha = 1,
+                    lambda = grid)
+
+# create plot to show how beta's are affected by tuning param
+## retreived from https://stackoverflow.com/questions/36656752/plotting-cv-glmnet-in-r
+betas = as.matrix(cv_out1$glmnet.fit$beta)
+lambdas1 = cv_out1$lambda
+names(lambdas1) = colnames(betas)
+coefPlot <- as.data.frame(betas) %>% 
+              tibble::rownames_to_column("variable") %>% 
+              pivot_longer(-variable) %>% 
+              mutate(lambda=lambdas1[name]) %>% 
+              ggplot(aes(x=lambda,y=value,col=variable)) + 
+              geom_line() + 
+              geom_label_repel(data=~subset(.x,lambda==min(lambda)),
+              aes(label=variable),nudge_x=-0.5) +
+              scale_x_log10()
+coefPlot
+```
+The lambda values with minimum CV error and chosen by the one standard rule are shown below, along with the corresponding coefficient estimates.
+
+```{r}
+# display the output of 5-fold cv for ridge regression comparing MSE to lambdas
+plot(cv_out1)
 ```
 
-#### Variable Selection Methods
+The optimal value of $\lambda$ is `r round(cv_out1$lambda.1se)`
+
+#### Splines to Capture Nonlinear Effects: 
+
+Within the same method, we find the optimal lambda for nonlinear effect. The dataset is the same one we used for Ridge Regression which is transformed with variables humidity and windspeed.
+
+```{r}
+# create datastructures for tuning process
+y_train_spline <- train_set_spline$cnt
+X_train_spline <- as.matrix(train_set_spline %>% select(-c('cnt', 'dteday')))
+
+# create grid of potential hyperparam values, train model for each value using 5-fold cv
+set.seed(54321)
+grid <- 10^seq(-4, 8, length = 100)
+cv_out3 <- cv.glmnet(x = X_train_spline, y = y_train_spline,
+                    type.measure='mse',
+                    nfolds = 5,
+                    alpha = 1,
+                    lambda = grid)
+
+plot(cv_out3)
+```
+
+The optimal value of $\lambda$ is `r round(cv_out3$lambda.1se, 3)`
+
+#### Model Selection
+
+By compare the two models, lasso regression and lasso regression + piecewise spline, against our test dataset. The model with lower test MSE will be determined as better.
+
+```{r}
+# evaluate performance of ridge regression model
+y_test <- test_set$cnt
+X_test <- as.matrix(test_set %>% select(-c('cnt', 'dteday')))
+pred1 <- predict(cv_out1, X_test)
+lassoReg <- c()
+lassoReg <- append(lassoReg, mean((pred1 - y_test)^2))       # mse
+lassoReg <- append(lassoReg, mean((mean(pred1) - y_test)^2)) # squared bias
+lassoReg <- append(lassoReg, mean((pred1 - mean(pred1))^2))   # variance
+
+# evaluate performance of ridge+spline regression model
+y_test <- test_set_spline$cnt
+X_test <- as.matrix(test_set_spline %>% select(-c('cnt', 'dteday')))
+pred3 <- predict(cv_out3, X_test)
+lassoSplineReg <- c()
+lassoSplineReg <- append(lassoSplineReg, mean((pred3 - y_test)^2))       # mse
+lassoSplineReg <- append(lassoSplineReg, mean((mean(pred3) - y_test)^2)) # squared bias
+lassoSplineReg <- append(lassoSplineReg, mean((pred3 - mean(pred3))^2))   # variance
+
+# print table
+results1 <- data.frame(lassoReg, lassoSplineReg, row.names = c('MSE', 'Squared-Bias', 'Variance'))
+kable(results1, 
+      caption = "Results of Lasso Regression Models on Test Dataset", 
+      digits = 3) %>% 
+        kable_styling(latex_options = "hold_position")
+```
+
+Lasso regression without splines has a lower MSE, so we choose it as our final model. 
 
 #### Splines to Capture Nonlinear Effects
 
@@ -186,7 +268,6 @@ $$y_i = \beta_0 + \beta_1 x_i + \beta_2 x_i^2 + \beta_3 x_i^3 + \sum_{k = 1}^K \
 
 Where the summation represents as series of $K$ terms that capture nonlinear effects at different intervals of the predictor variable.
 
-#### Model Selection
 
 
 
