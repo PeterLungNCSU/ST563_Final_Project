@@ -7,6 +7,8 @@ output:
   pdf_document:
     toc: true
     toc_depth: 4
+    fig_caption: yes
+
 ---
 
 ```{r setup, include = FALSE}
@@ -99,26 +101,59 @@ The predictor variables all pertain to either weather conditions or seasonal eff
 
 We are also interested in testing which variables have nonlinear effects and modeling them with splines. In all tests, we will evaluate the models with cross validation and test each model's predictive power with a consistent holdout sample.
 
+\newpage
 ## Methods
 
 This section will detail the methodologies and evaluations used for each type of model tested.
 
 ### Exploratory Data Analysis
 
+#### Daily Bike Rental Count 
+\hfill\break
+
+```{r, echo=FALSE, fig.width = 8, fig.height = 4,, fig.cap = "Daily Bike Rentals"}
+# give labels to season
+day$seasonTag <- ifelse(day$season==1, 'Winter', 
+                        ifelse(day$season==2, 'Spring',
+                               ifelse(day$season==3, 'Summer', 'Fall')))
+
+# plot seasonal trends
+ggplot(data = day, aes(x = instant, y = cnt)) +
+    geom_point(aes(colour = factor(seasonTag))) +
+    labs(title = 'Seasonal Trends in Daily Bike Rentals\nBetween 2011-01-01 and 2012-12-31', 
+         x = 'Day Number', 
+         y = 'Count of Bike Rentals', 
+         color = 'Season')
+```
+
+In figure 1, we plot the day of year vs the count of bike rentals. We notice a seasonal trend: bike rentals increase starting at the beginning of spring, reach a maximum in the summer, and then start to decrease in the fall. This trend is not surprising as it is expected that bike rentals will be more popular in the warmer seasons.
+
+#### Weather and Season Multi-collinearity
+\hfill\break
+
+```{r, echo = FALSE, fig.width = 8, fig.height = 4, fig.cap = "Weather trends"}
+# give labels to weather
+day$weathersitTag <- ifelse(day$weathersit==1, 'None', 
+                        ifelse(day$weathersit==2, 'Mist',
+                               ifelse(day$weathersit==3, 'Light', 'Heavy')))
+
+# plot seasonal trends
+ggplot(data = day, mapping = aes(x = seasonTag, fill = weathersitTag)) +
+    geom_bar(position = 'dodge') +
+    labs(title = 'Frequency of Precipitation by Season', 
+         x = 'Season', 
+         y = 'Number of Days', 
+         fill = 'Type of Precipitation')
+
+```
+
+In figure 2, we notice the summers have more clear days and less mist/light precipitation days. This leads us to believe that season and precipitation may exhibit multi-collinearity with the daily bike rental count.
+
 #### Correlation Matrix 
 \hfill\break
-```{r, echo = FALSE}
-#Required: install remotes package 
-#install.packages("remotes")
-# install corrmorant from the github repository
-#remotes::install_github("r-link/corrmorant")
 
-#Check out the dataset
-head(day)
-dim(day)
-#Mapping the amount of cnt based on 4 seasons, coloring points by weather conditions
-ggplot(day,aes(cnt,season,color=weathersit)) + geom_point()
 
+```{r, echo = FALSE, fig.cap = "Correlation Matrix"}
 library(corrmorant)
 ggcorrm(data = day[,c(3, 7:14)]) +
   lotri(geom_point(alpha = 0.5)) +
@@ -127,7 +162,8 @@ ggcorrm(data = day[,c(3, 7:14)]) +
   dia_density(lower = 0.3, fill = "grey80", color = 1)
 ```
 
-Based on the correlation plot, the upper triangle shows the correlation strength that temp(0.63), atemp(0.63) and Season(0.41) have strong correlation with the response variable(cnt). At the same time, the lower triangle scatter plot tells that when weathersit equal to 3 there might be some correlations there can be analysed. 
+
+Based on the correlation plot in figure 3, the upper triangle shows the correlation strength that temp(0.63), atemp(0.63) and Season(0.41) have strong correlation with the response variable(cnt). At the same time, the lower triangle scatter plot tells that when weathersit equal to 3 there might be some correlations there can be analysed. 
 
 
 #### Splines for Non-Linear Predictors 
@@ -138,9 +174,9 @@ $$y_i = \beta_0 + \beta_1 x_i + \beta_2 x_i^2 + \beta_3 x_i^3 + \sum_{k = 1}^K \
 
 Where the summation represents as series of $K$ terms that capture nonlinear effects at different intervals of the predictor variable. 
 
-The following plots show two variables, Humidity and Windspeed, which have nonlinear relationships with Count and will be modeled with splines.
+The following plots in figure 4 show two variables, Humidity and Windspeed, which have nonlinear relationships with Count and will be modeled with splines.
 
-```{r edaSpline, fig.width = 8, fig.height = 4, echo=FALSE, cache=TRUE}
+```{r edaSpline, fig.width = 8, fig.height = 4, echo=FALSE, cache=TRUE, fig.cap = "Non-linear Predictors"}
 humCnt <- ggplot(data=day) + 
             geom_point(mapping=aes(x=hum, y=cnt)) +
             ggtitle("Impact of Humidity on Bike Rentals") +
@@ -167,9 +203,9 @@ Solving this equation minimizes residual sum of squares while preventing the $\b
 
 We will tune the hyperparameter, $\lambda$ using 5-fold cross-validation. The predictors we will include in training are all scaled continuous variables and all indicator variables originally created. The response variable will be the count of bike rentals. We will test lambda values between $10^{-2}$ and $10^{10}$.
 
-Below, we see a plot showing how the coefficients of the regression models transform as we change the value of lambda. Initially, `temp` and `atemp`, two variables that have been identified as being highly correlated, have wildly differing coefficients. However, as we increase our hyperparameter, these two coefficients grow closer to each other, fixing our issue of multicollinearity. Similarly, `hum` (humidity) and `weathersit_3` (Light Snow, Light Rain + Thunderstorm + Scattered clouds, Light Rain + Scattered clouds) are correlated but show varying regression coefficients for low values af lambda. But, as we increase lambda, the coefficients of these two correlated variables become much more similar. 
+Below in figure 5, we see a plot showing how the coefficients of the regression models transform as we change the value of lambda. Initially, `temp` and `atemp`, two variables that have been identified as being highly correlated, have wildly differing coefficients. However, as we increase our hyperparameter, these two coefficients grow closer to each other, fixing our issue of multicollinearity. Similarly, `hum` (humidity) and `weathersit_3` (Light Snow, Light Rain + Thunderstorm + Scattered clouds, Light Rain + Scattered clouds) are correlated but show varying regression coefficients for low values af lambda. But, as we increase lambda, the coefficients of these two correlated variables become much more similar. 
 
-```{r ridgeReg1, fig.width = 8, fig.height = 4, echo=FALSE, cache=TRUE}
+```{r ridgeReg1, fig.width = 8, fig.height = 4, echo=FALSE, cache=TRUE, fig.cap = "Ridge Hyperparameter Tuning, Impact of Lambda on Coefficients"}
 # create datastructures for tuning process
 y_train <- train_set$cnt
 X_train <- as.matrix(train_set %>% select(-c('cnt', 'dteday')))
@@ -202,7 +238,7 @@ coefPlot
 
 Next we will examine the plot of lambda values vs MSE as seen below. The left-most dashed vertical line represents the minimum MSE value. This value is often considered the 'best' value of lambda but often times leads to overfitting. Therefore, we will select our 'optimal' lambda as the lambda value within 1 standard error of the minimum MSE lambda to reduce variance in our predictions. This value is displayed on the plot as the right-most dashed vertical line.
 
-```{r ridgeReg2, fig.width = 8, fig.height = 4, results='hide',fig.keep='all', echo=FALSE}
+```{r ridgeReg2, fig.width = 8, fig.height = 3, results='hide',fig.keep='all', echo=FALSE, fig.cap = "Ridge Hyperparameter Tuning, Choosing Optimal Lambda"}
 # display the output of 5-fold cv for ridge regression comparing MSE to lambdas
 plot(cv_out)
 ```
@@ -213,9 +249,9 @@ The optimal value of $\lambda$ is `r round(cv_out$lambda.1se, 3)`
 
 Next, we will fit a ridge regression model on the same training dataset, but, with humidity and windspeed variables transformed with splines. This transformation will attempt to boost the predictive power of humidity and windspeed. 
 
-Similar to above, we will train the model using 5-fold cross-validation. The optimal $\lambda$ will be selected using the 1 standard-error rule. This value is displayed on the plot below as the right-most dashed vertical line.
+Similar to above, we will train the model using 5-fold cross-validation. The optimal $\lambda$ will be selected using the 1 standard-error rule. This value is displayed on the in figure 7 below as the right-most dashed vertical line.
 
-```{r ridgeReg3, fig.width = 8, fig.height = 4, echo=FALSE, cache=TRUE}
+```{r ridgeReg3, fig.width = 8, fig.height = 3, echo=FALSE, cache=TRUE, fig.cap = "Ridge+Spline Hyperparameter Tuning, Choosing Optimal Lambda"}
 # create datastructures for tuning process
 y_train_spline <- train_set_spline$cnt
 X_train_spline <- as.matrix(train_set_spline %>% select(-c('cnt', 'dteday')))
@@ -265,8 +301,16 @@ kable(results,
         kable_styling(latex_options = "hold_position")
 ```
 
+
 Ridge regression without splines has a lower MSE. Therefore, we will use this model for final comparison.
 
+
+
+
+
+
+
+\newpage
 \newpage
 ### Lasso Regression
 
@@ -282,7 +326,7 @@ Similar to the Ridge regression, we will see the coefficients of the predictors 
 
 Although atemp and temp are highly correlated with each other (as seen in the correlation matrix above) and might be a source of multicollinearity, the lasso method alleviates this problem be forcing the coefficients of correlated predictors closer together.
 
-```{r, echo = FALSE}
+```{r lassoReg1, fig.width = 8, fig.height = 4, echo = FALSE, fig.cap = "Lasso Hyperparameter Tuning, Impact of Lambda on Coefficients"}
 # create datastructures for tuning process
 y_train <- train_set$cnt
 X_train <- as.matrix(train_set %>% select(-c('cnt', 'dteday')))
@@ -314,9 +358,9 @@ coefPlot <- as.data.frame(betas) %>%
 coefPlot
 ```
 
-The lambda values with minimum CV error and chosen by the one standard rule are shown below, along with the corresponding coefficient estimates.
+The lambda values with minimum CV error and chosen by the one standard rule are shown below in figure 9, along with the corresponding coefficient estimates.
 
-```{r, echo = FALSE}
+```{r lassoReg2, fig.width = 8, fig.height = 4, echo = FALSE, fig.cap = "Lasso Hyperparameter Tuning, Choosing Optimal Lambda"}
 # display the output of 5-fold cv for ridge regression comparing MSE to lambdas
 plot(cv_out1)
 ```
@@ -325,9 +369,9 @@ The optimal value of $\lambda$ is `r round(cv_out1$lambda.1se)`
 
 #### Splines to Capture Nonlinear Effects: 
 
-Now, we will attempt to fit a lasso regression model on the training datset where a piecewise spline transformation is applied to humidity and windspeed. This model will attempt to alleviate the non-lineararity concerns spurred by these two predictors.
+Now, we will attempt to fit a lasso regression model on the training datset where a piecewise spline transformation is applied to humidity and windspeed. This model will attempt to alleviate the non-lineararity concerns spurred by these two predictors. Again the optimal value will be chosen using the one standard-error rule, as seen in figure 10. 
 
-```{r, echo = FALSE}
+```{r lassoReg3, fig.width = 8, fig.height = 4, echo = FALSE, fig.cap = "Lasso+Spline Hyperparameter Tuning, Choosing Optimal Lambda"}
 # create datastructures for tuning process
 y_train_spline <- train_set_spline$cnt
 X_train_spline <- as.matrix(train_set_spline %>% select(-c('cnt', 'dteday')))
@@ -350,7 +394,7 @@ The optimal value of $\lambda$ with splines is `r round(cv_out3$lambda.1se, 3)`
 
 We will now compare the two models, lasso regression and lasso regression + splines, against our test dataset. The model with lower test MSE will be determined as better.
 
-```{r, echo = FALSE}
+```{r lassoReg4, echo = FALSE}
 # evaluate performance of ridge regression model
 y_test <- test_set$cnt
 X_test <- as.matrix(test_set %>% select(-c('cnt', 'dteday')))
@@ -427,7 +471,7 @@ As can be seen in the table, 80% of the variation in the predictors is captured 
 
 Although the dimensionality of the data is successfully reduced, the relationship between the components and the response variable determine the overall quality of the model. The following scatterplots show the relationship between each component and the response in the training data:
 
-```{r PCA_scatter, echo = FALSE, fig.width = 3.5, fig.height = 1.75, cache = TRUE}
+```{r PCA_scatter, echo = FALSE, fig.width = 3.5, fig.height = 1.75, cache = TRUE, fig.cap = "Principal Components Visualized"}
 pca_train <- cbind(train_set, data.frame(Z)) %>% select(-temp, -atemp, -hum, -windspeed)
 ggplot(data = pca_train, aes(x = PC1, y = cnt)) + geom_point(color = "steelblue", size = 0.25) + 
   labs(title = "Scatterplot of Response and PC1", y = "Count of Bike Users", x = "PC1")
@@ -474,7 +518,7 @@ The regression analysis was tested for including three combinations of the princ
 
 All other variables are allowed into the model specification. The results from the cross validation for each of those model specifications is displayed in the table.
 
-```{r PCA_CV_Code, echo = FALSE}
+```{r PCA_CV_Code, echo = FALSE, cache=TRUE}
 # Create grid of NS DF to test
 PC1_df <- c(rep(2, 625), rep(3, 625), rep(4, 625), rep(5, 625), rep(6, 625))
 PC2_df <- c(rep(2, 125), rep(3, 125), rep(4, 125), rep(5, 125), rep(6, 125))
@@ -663,7 +707,7 @@ Based on these results, the final PCA model includes the first three components 
 
 Regression output from the final model is displayed below.
 
-```{r PCA_Final, echo = FALSE}
+```{r PCA_Final, echo = FALSE, cache=TRUE}
 # Final PCA Model
 pca_final <- lm(cnt ~ ns(PC1, df = PC1_df) +
                        ns(PC2, df = PC2_df) +
@@ -685,19 +729,42 @@ pca_final %>% tidy() %>% kable(digits = 3)
 
 ### Performance on the Holdout Dataset
 
+Below in table 5, we show a comparison of the model performance on test set:
 ```{r Holdout_RMSE, echo = FALSE}
 # Generate predictions and holdout RMSE for the PCA Model
 pca_pred <- predict(pca_final, newdata = pca_test) 
 pca_RMSE <- round(sqrt(mean((pca_pred - pca_test$cnt)^2)), 2)
 
+# print table comparing all models on holdoutset
+results <- data.frame(sqrt(ridgeReg[1]), 
+                      sqrt(ridgeSplineReg[1]), 
+                      sqrt(lassoReg[1]), 
+                      sqrt(lassoSplineReg[1]), 
+                      pca_RMSE, row.names = c('RMSE'))
+colnames(results) <- c('Ridge', 'Ridge+Spline', 'Lasso', 'Lasso+Spline', 'PCA')
+
+kable(results, 
+      caption = "Results of Models on Test Dataset", 
+      digits = 3) %>% 
+        kable_styling(latex_options = "hold_position")
 ```
 
-The holdout dataset RMSE for the PCA model is **`r pca_RMSE`**.
+The best performing model is PCA. Its RMSE on the holdout dataset is **`r pca_RMSE`**.
 
 ### Commentary on Model Performance
 
 In the PCA model, the data reduction achieved was minimal, as three out of four principal components were present in the final model (the fourth PC not being considered for inclusion to enable at least some dimension reduction). The splines were able to model nonlinear effects in the components, however, and the holdout RMSE demonstrates a good test error for this model.
 
+Ridge and Lasso regression methods fell short of modeling non-linear variables. Additionally, when splines were incorporated into ridge/lasso, model performance grew worse. 
+
+### Final Thoughts
+
+Moving forward, collecting additional data would be beneficial to the performance of lasso/ridge/pca techniques. The original dataset contains 14 variables (including the response variable). Of which, 7 variables are used to describe the day of the year and 1 variable represents the row number in the dataset. In reality, this dataset provides 6 uniquely collected variables to predict the daily count of bike renters. Looking back, perhaps due to the limited number of variables to start with, shrinkage or dimension reduction methods may not have been appropriate. 
+
+Another idea to consider is the potential to fit a time-series model rather than a learning model. The dataset exhibits strong seasonal trends as well as an overall yearly increase in daily bike rentals. Given a longer range of data, perhaps the time-series model would outperform a learning model.
+
+
+\newpage
 ## Appendix
 
 ```{r appendix, eval = FALSE}
