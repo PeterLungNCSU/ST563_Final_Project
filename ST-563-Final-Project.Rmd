@@ -2,7 +2,7 @@
 title: "ST 563 Final Project - Bike Sharing Data"
 author: "Peter Lung, David Shaw, Yijia Cai"
 subtitle: "Team #1"
-date: "11/4/2021"
+date: "12/2/2021"
 output: 
   pdf_document:
     toc: true
@@ -107,7 +107,7 @@ This section will detail the methodologies and evaluations used for each type of
 
 #### Correlation Matrix 
 \hfill\break
-```{r}
+```{r, echo = FALSE}
 #Required: install remotes package 
 #install.packages("remotes")
 # install corrmorant from the github repository
@@ -129,9 +129,16 @@ ggcorrm(data = day[,c(3, 7:14)]) +
 
 Based on the correlation plot, the upper triangle shows the correlation strength that temp(0.63), atemp(0.63) and Season(0.41) have strong correlation with the response variable(cnt). At the same time, the lower triangle scatter plot tells that when weathersit equal to 3 there might be some correlations there can be analysed. 
 
+
 #### Splines for Non-Linear Predictors 
 \hfill\break
-Some predictors exhibit non-linear relationships with the response variable. To ameliorate the predictive power of such variables, we will generate piecewise splines to model non-linear effects. The following plots show two variables, Humidity and Windspeed, which have nonlinear relationships with Count and will be modeled with splines.
+Some predictors exhibit non-linear relationships with the response variable. Splines capture nonlinear effects by allowing the model to fit a smooth linear curve from a set of cubic functions onto the data. The general form for a cubic spline in a simple linear regression model is:
+
+$$y_i = \beta_0 + \beta_1 x_i + \beta_2 x_i^2 + \beta_3 x_i^3 + \sum_{k = 1}^K \left( \beta_{k + 3} (x_i - t_k)^3 \cdot I_{x_i > t_k} \right) + \varepsilon_i$$
+
+Where the summation represents as series of $K$ terms that capture nonlinear effects at different intervals of the predictor variable. 
+
+The following plots show two variables, Humidity and Windspeed, which have nonlinear relationships with Count and will be modeled with splines.
 
 ```{r edaSpline, fig.width = 8, fig.height = 4, echo=FALSE, cache=TRUE}
 humCnt <- ggplot(data=day) + 
@@ -145,13 +152,12 @@ windCnt <- ggplot(data=day) +
 grid.arrange(humCnt, windCnt, nrow=1)
 ```
 
-Generating piecewise splines for these data may boost some of the predictive power of these variables and could lead to stronger performance of models.
+Generating splines for these data may boost some of the predictive power of these variables and could lead to stronger performance of models.
 
 \newpage
 ### Ridge Regression
 
-The second method that will be utilized for prediction is Ridge Regression. This method is recommneded for data with
-visible multi-colinearity as it seeks to minimize the following equation:
+The first method that will be utilized for prediction is Ridge Regression. This method is recommeneded for data with visible multi-colinearity as it seeks to minimize the following equation:
 
 \[ \sum_{i} (Y_i-X_{i1}\beta_{1}-...-X_{ip}\beta_{p})^2 + \lambda \sum_{j=1}^p \beta_{j}^{2} \]
 
@@ -193,6 +199,7 @@ coefPlot <- as.data.frame(betas) %>%
               scale_x_log10()
 coefPlot
 ```
+
 Next we will examine the plot of lambda values vs MSE as seen below. The left-most dashed vertical line represents the minimum MSE value. This value is often considered the 'best' value of lambda but often times leads to overfitting. Therefore, we will select our 'optimal' lambda as the lambda value within 1 standard error of the minimum MSE lambda to reduce variance in our predictions. This value is displayed on the plot as the right-most dashed vertical line.
 
 ```{r ridgeReg2, fig.width = 8, fig.height = 4, results='hide',fig.keep='all', echo=FALSE}
@@ -202,15 +209,9 @@ plot(cv_out)
 
 The optimal value of $\lambda$ is `r round(cv_out$lambda.1se, 3)`
 
-#### Splines to Capture Nonlinear Effects - Explanation: 
+#### Splines to Capture Nonlinear Effects: 
 
-Splines capture nonlinear effects by allowing the model to fit a smooth linear curve from a set of cubic functions onto the data. The general form for a cubic spline in a simple linear regression model is:
-
-$$y_i = \beta_0 + \beta_1 x_i + \beta_2 x_i^2 + \beta_3 x_i^3 + \sum_{k = 1}^K \left( \beta_{k + 3} (x_i - t_k)^3 \cdot I_{x_i > t_k} \right) + \varepsilon_i$$
-
-Where the summation represents as series of $K$ terms that capture nonlinear effects at different intervals of the predictor variable.
-
-Using piecewise spline transformations for the predictors humidity and windspeed, we will fit an additional will fit a ridge regression model and compare to our original model.
+Next, we will fit a ridge regression model on the same training dataset, but, with humidity and windspeed variables transformed with splines. This transformation will attempt to boost the predictive power of humidity and windspeed. 
 
 Similar to above, we will train the model using 5-fold cross-validation. The optimal $\lambda$ will be selected using the 1 standard-error rule. This value is displayed on the plot below as the right-most dashed vertical line.
 
@@ -266,7 +267,6 @@ kable(results,
 
 Ridge regression without splines has a lower MSE. Therefore, we will use this model for final comparison.
 
-
 \newpage
 ### Lasso Regression
 
@@ -276,15 +276,13 @@ Lasso as a shrinkage method uses a penalty term involving sum of the absolute va
 
 Lasso estimates of $\beta_{j}$ by minimizing residual sum of squares for $\lambda>=0$. Additionally, lasso regression has the advantage of eliminating terms from the model (setting coefficients to zero) which classifies the technique as a dimension reduction method.
 
-
 #### Hyperparameter Tuning:
 
+Similar to the Ridge regression, we will see the coefficients of the predictors change as lambda increases of based on the figure below. The solution path selected variables: temp, yr, atemp, mnth_9, weathersit_3, season_1, hum, and windspeed as the most influential variables in the model. 
 
-Similar to the Ridge regression, we will see the coefficients of the predictors change as lambda increases of based on the figure below. The solution path selected variables: temp, yr, atemp, mnth_9,
-weathersit_3, season_1, hum, and windspeed as the most influential variables in the model. 
 Although atemp and temp are highly correlated with each other (as seen in the correlation matrix above) and might be a source of multicollinearity, the lasso method alleviates this problem be forcing the coefficients of correlated predictors closer together.
 
-```{r}
+```{r, echo = FALSE}
 # create datastructures for tuning process
 y_train <- train_set$cnt
 X_train <- as.matrix(train_set %>% select(-c('cnt', 'dteday')))
@@ -315,9 +313,10 @@ coefPlot <- as.data.frame(betas) %>%
               scale_x_log10()
 coefPlot
 ```
+
 The lambda values with minimum CV error and chosen by the one standard rule are shown below, along with the corresponding coefficient estimates.
 
-```{r}
+```{r, echo = FALSE}
 # display the output of 5-fold cv for ridge regression comparing MSE to lambdas
 plot(cv_out1)
 ```
@@ -328,7 +327,7 @@ The optimal value of $\lambda$ is `r round(cv_out1$lambda.1se)`
 
 Now, we will attempt to fit a lasso regression model on the training datset where a piecewise spline transformation is applied to humidity and windspeed. This model will attempt to alleviate the non-lineararity concerns spurred by these two predictors.
 
-```{r}
+```{r, echo = FALSE}
 # create datastructures for tuning process
 y_train_spline <- train_set_spline$cnt
 X_train_spline <- as.matrix(train_set_spline %>% select(-c('cnt', 'dteday')))
@@ -345,13 +344,13 @@ cv_out3 <- cv.glmnet(x = X_train_spline, y = y_train_spline,
 plot(cv_out3)
 ```
 
-The optimal value of $\lambda$ is `r round(cv_out3$lambda.1se, 3)`
+The optimal value of $\lambda$ with splines is `r round(cv_out3$lambda.1se, 3)`
 
 #### Model Selection
 
-By compare the two models, lasso regression and lasso regression + piecewise spline, against our test dataset. The model with lower test MSE will be determined as better.
+We will now compare the two models, lasso regression and lasso regression + splines, against our test dataset. The model with lower test MSE will be determined as better.
 
-```{r}
+```{r, echo = FALSE}
 # evaluate performance of ridge regression model
 y_test <- test_set$cnt
 X_test <- as.matrix(test_set %>% select(-c('cnt', 'dteday')))
@@ -396,32 +395,32 @@ As with the other models, we will attempt to utilize cubic splines of the indivi
 
 * Wind Speed
 
-Seasonal categorical variables will be added to the regression analysis along with splines of the principal components selected for inclusion. Certain categorical variables are coded numerically (such as day of the week and month of the year) so these variables will be modeled with natural cubic splines. Other variables will be coded as simple dummy variables in the final regression model.
+Seasonal categorical variables will be added to the regression analysis along with splines of the principal components selected for inclusion. Certain categorical variables are coded numerically (such as day of the week and month of the year) so these variables will be modeled with natural cubic splines as there is a natural order to their numbering. This will capture effects such as the increase in counts during the summer as compared to the winter. Season will be modeled with a quadratic functional form and weather situation will be modeled linearly. Other variables, such as holidays and year, will be coded as simple dummy variables in the final regression model.
 
 
 #### PCA and Component Selection
-
-**Move table and plots to appendix!!**
 
 The first step is to perform PCA on the four continuous variables. Each variable is both scaled and centered in preparation for entering the principal components procedure. This ensures that each variable has comparable variability with the others.
 
 Since each variable is standardized, the total variation in the predictors is simple the number of predictors, which is 4. The following table displays the proportion of the variance from each of the four principal components as well as the cumulative variance.
 
 
-```{r PCA, include = FALSE, cache = TRUE}
+```{r PCA, echo = FALSE, cache = TRUE}
+# Run PCA on the continuous variables
 Xstd <- train_set %>% select(temp, atemp, hum, windspeed)
-#Xstd <- scale(X, center = TRUE, scale = TRUE)
-
 pc_out <- prcomp(Xstd)
+
+# Extend PCA to test set for holdout analysis
+Xstd_test <- predict(pc_out, test_set)
+pca_test <- cbind(test_set, Xstd_test) %>% select(-temp, -atemp, -hum, -windspeed)
+
+# Create table to display variation
 names(pc_out)
 Z <- pc_out$x
-
 PC_var <-c(var(Z[,1]) / 4, var(Z[,2]) / 4, var(Z[,3]) / 4, var(Z[,4]) / 4)
 PC_table <- data.frame(Component = c(1:4), Variance = PC_var)
 PC_table <- PC_table %>% mutate(Cum_Variance = cumsum(Variance))
-
 kable(PC_table, caption = "Proportion of Total Variance of Individual Components", digits = 3) %>% kable_styling(latex_options = "hold_position")
-
 ```
 
 As can be seen in the table, 80% of the variation in the predictors is captured in the first two components and nearly all of the variation is captured in the first three. This is partially a result of the very strong correlation between temperature and ambient temperature. From this we can conclude that principal components will be effective at reducing the dimensionality of the data.
@@ -430,19 +429,14 @@ Although the dimensionality of the data is successfully reduced, the relationshi
 
 ```{r PCA_scatter, echo = FALSE, fig.width = 3.5, fig.height = 1.75, cache = TRUE}
 pca_train <- cbind(train_set, data.frame(Z)) %>% select(-temp, -atemp, -hum, -windspeed)
-
 ggplot(data = pca_train, aes(x = PC1, y = cnt)) + geom_point(color = "steelblue", size = 0.25) + 
   labs(title = "Scatterplot of Response and PC1", y = "Count of Bike Users", x = "PC1")
-
 ggplot(data = pca_train, aes(x = PC2, y = cnt)) + geom_point(color = "steelblue", size = 0.25) + 
   labs(title = "Scatterplot of Response and PC2", y = "Count of Bike Users", x = "PC2")
-
 ggplot(data = pca_train, aes(x = PC3, y = cnt)) + geom_point(color = "steelblue", size = 0.25) + 
   labs(title = "Scatterplot of Response and PC3", y = "Count of Bike Users", x = "PC3")
-
 ggplot(data = pca_train, aes(x = PC4, y = cnt)) + geom_point(color = "steelblue", size = 0.25) + 
   labs(title = "Scatterplot of Response and PC4", y = "Count of Bike Users", x = "PC4")
-
 ```
  
 The relationships between the individual components and the response are most pronounced in PC1 and PC2. PC1 looks like it may have a nonlinear effect on the response being somewhat flat on the low and high parts on the component and a positive relationship in between. The second component has what appears to be a negative effect on the response. The other two components don't appear to have any obvious relationship with Bike Sharing Counts based on the graph.
@@ -450,9 +444,11 @@ The relationships between the individual components and the response are most pr
 
 #### Splines to Capture Nonlinear Effects of the Components
 
-As in the preceding sections, cubic splines will be used to capture nonlinear effects of the components. In the case of PCA, the interpretation of the regression estimates from these splines is complicated by the fact that components are functions of a series of variables and not the original variables themselves. As such, there will be no attempt here to interpret coefficients, but rather to assess fit and predictive power.
+As in the preceding sections, cubic splines will be considered to capture nonlinear effects of the components. In the case of PCA, the interpretation of the regression estimates from these splines is complicated by the fact that components are functions of a series of variables and not the original variables themselves. As such, there will be no attempt here to interpret coefficients, but rather to assess fit and predictive power.
 
 The splines being used are natural cubic splines. The cumulative variation has suggested that PC4 contains very little of the variation from the predictors and will be omitted from the model selection procedure. The graphical analysis has suggested that while PC1 certainly seems to have nonlinear effects present, it is uncertain whether PC2 or PC3 have nonlinear effects, or whether they should be included in the model. As such, they will both be tested for spline effects.
+
+The idea of modeling this way is to reduce the variable dimensions, but model the nonlinear effects with natural splines such that the bias is minimized.
 
 #### Model Selection
 
@@ -470,28 +466,497 @@ Model selection was performed using 5-fold cross-validation to determine to opti
 
 The regression analysis was tested for including three combinations of the principal components including
 
-* Just PC1 
-
-* PC1 and PC2 
-
 * PC1, PC2 and PC3
 
-All other variables are allowed into the model specification.
+* PC1 and PC2 
+ 
+* Just PC1
 
+All other variables are allowed into the model specification. The results from the cross validation for each of those model specifications is displayed in the table.
 
+```{r PCA_CV_Code, echo = FALSE}
+# Create grid of NS DF to test
+PC1_df <- c(rep(2, 625), rep(3, 625), rep(4, 625), rep(5, 625), rep(6, 625))
+PC2_df <- c(rep(2, 125), rep(3, 125), rep(4, 125), rep(5, 125), rep(6, 125))
+PC3_df <- c(rep(2,  25), rep(3,  25), rep(4,  25), rep(5,  25), rep(6,  25))
+DOW_df <- c(rep(1,   5), rep(2,   5), rep(3,   5), rep(4,   5), rep(5 ,   5))
+Mth_df <- c(1:5)
+RMSE0 <- rep(0, 3125)
+Grid1 <- data.frame(PC1 = PC1_df, PC2 = rep(PC2_df, 5), PC3 = rep(PC3_df, 25), 
+                    DOW = rep(DOW_df, 125), Month = rep(Mth_df, 625), RMSE = RMSE0)
+
+# Five folds
+k = 5
+folds <- cvFolds(NROW(pca_train), K=k)
+
+#Test each row from the grid in a loop
+for(j in 1:nrow(Grid1)){
+  # Create a temporary dataset to create folds and build model
+  temp <- pca_train
+  temp$holdoutpred <- rep(0, nrow(temp))
+  for(i in 1:k){
+    # Split temporary data into test (fold k) and train (folds not equal to k)
+    train <- temp[folds$subsets[folds$which != i], ]
+    val   <- temp[folds$subsets[folds$which == i], ]
+  
+    # Fit the linear model with the specified natural spline df for each cont. var
+    pca_ns <- lm(cnt ~ ns(PC1, df = Grid1[j, 1]) +
+                       ns(PC2, df = Grid1[j, 2]) +
+                       ns(PC3, df = Grid1[j, 3]) +
+                       ns(weekday, df = Grid1[j, 4]) +
+                       ns(mnth, df = Grid1[j, 5]) +
+                       weathersit + 
+                       yr + 
+                       poly(season, 2) +
+                       holiday
+                   , data = train)
+    
+    # Generate predictions on fold k
+    newpred <- predict(pca_ns, newdata=val) 
+    
+    # Save predictions in temp
+    temp[folds$subsets[folds$which == i], ]$holdoutpred <- newpred 
+  }
+  
+  # Calculate RMSE from all folds combined
+  RMSE <- round(sqrt(mean((temp$holdoutpred - temp$cnt)^2)), 4)
+  
+  # Save RMSE in grid 1
+  Grid1[j, 6] <- RMSE
+}
+
+# Find the best model (min RMSE) from PC1, PC2 & PC3
+df_vec1 <- Grid1 %>% filter(RMSE == min(Grid1$RMSE))
+
+# Create grid of NS DF to test
+PC1_df <- c(rep(2, 125), rep(4, 125), rep(6, 125), rep(8, 125), rep(10, 125))
+PC2_df <- c(rep(2,  25), rep(4,  25), rep(6,  25), rep(8,  25), rep(10,  25))
+DOW_df <- c(rep(1,   5), rep(2,   5), rep(3,   5), rep(4,   5), rep(5 ,   5))
+Mth_df <- c(1:5)
+RMSE0 <- rep(0, 625)
+Grid2 <- data.frame(PC1 = PC1_df, PC2 = rep(PC2_df, 5), DOW = rep(DOW_df, 25), 
+                    Month = rep(Mth_df, 125), RMSE = RMSE0)
+
+# Five folds
+k = 5
+folds <- cvFolds(NROW(pca_train), K=k)
+
+#Test each row from the grid in a loop
+for(j in 1:nrow(Grid2)){
+  # Create a temporary dataset to create folds and build model
+  temp <- pca_train
+  temp$holdoutpred <- rep(0, nrow(temp))
+  for(i in 1:k){
+    # Split temporary data into test (fold k) and train (folds not equal to k)
+    train <- temp[folds$subsets[folds$which != i], ]
+    val   <- temp[folds$subsets[folds$which == i], ]
+    
+    # Fit the linear model with the specified natural spline df for each cont. var
+    pca_ns <- lm(cnt ~ ns(PC1, df = Grid2[j, 1]) +
+                   ns(PC2, df = Grid2[j, 2]) +
+                   ns(weekday, df = Grid2[j, 3]) +
+                   ns(mnth, df = Grid2[j, 4]) +
+                   weathersit + 
+                   yr + 
+                   poly(season, 2) +
+                   holiday
+                 , data = train)
+    
+    # Generate predictions on fold k
+    newpred <- predict(pca_ns, newdata=val) 
+    
+    # Save predictions in temp
+    temp[folds$subsets[folds$which == i], ]$holdoutpred <- newpred 
+  }
+  
+  # Calculate RMSE from all folds combined
+  RMSE <- round(sqrt(mean((temp$holdoutpred - temp$cnt)^2)), 4)
+  
+  # Save RMSE in grid 2
+  Grid2[j, 5] <- RMSE
+}
+
+# Find the best model (min RMSE) from PC1 & PC2
+df_vec2 <- Grid2 %>% filter(RMSE == min(Grid2$RMSE))
+
+# Create grid of NS DF to test
+PC1_df <- c(rep(2,  25), rep(4,  25), rep(6,  25), rep(8,  25), rep(10,  25))
+DOW_df <- c(rep(1,   5), rep(2,   5), rep(3,   5), rep(4,   5), rep(5 ,   5))
+Mth_df <- c(1:5)
+RMSE0 <- rep(0, 125)
+Grid3 <- data.frame(PC1 = PC1_df, DOW = rep(DOW_df, 5),  Month = rep(Mth_df, 25), RMSE = RMSE0)
+
+# Five folds
+k = 5
+folds <- cvFolds(NROW(pca_train), K=k)
+
+#Test each row from the grid in a loop
+for(j in 1:nrow(Grid3)){
+  # Create a temporary dataset to create folds and build model
+  temp <- pca_train
+  temp$holdoutpred <- rep(0, nrow(temp))
+  for(i in 1:k){
+    # Split temporary data into test (fold k) and train (folds not equal to k)
+    train <- temp[folds$subsets[folds$which != i], ]
+    val   <- temp[folds$subsets[folds$which == i], ]
+    
+    # Fit the linear model with the specified natural spline df for each cont. var
+    pca_ns <- lm(cnt ~ ns(PC1, df = Grid3[j, 1]) +
+                   ns(weekday, df = Grid3[j, 2]) +
+                   ns(mnth, df = Grid3[j, 3]) +
+                   weathersit + 
+                   yr + 
+                   poly(season, 2) +
+                   holiday
+                 , data = train)
+    
+    # Generate predictions on fold k
+    newpred <- predict(pca_ns, newdata=val) 
+    
+    # Save predictions in temp
+    temp[folds$subsets[folds$which == i], ]$holdoutpred <- newpred 
+  }
+  
+  # Calculate RMSE from all folds combined
+  RMSE <- round(sqrt(mean((temp$holdoutpred - temp$cnt)^2)), 4)
+  
+  # Save RMSE in grid 2
+  Grid3[j, 4] <- RMSE
+}
+
+# Find the best model (min RMSE) from just PC1
+df_vec3 <- Grid3 %>% filter(RMSE == min(Grid3$RMSE))
+
+# Create Table of Best Models
+df_vec2$PC3 <- 0
+df_vec3$PC2 <- 0
+df_vec3$PC3 <- 0
+df_vec <- rbind(df_vec1, df_vec2, df_vec3)
+
+Model <- c("PC1, PC2 & PC3", "PC1 & PC2", "PC1 only")
+df_vec <- cbind(Model, df_vec)
+
+# Print table
+kable(df_vec, caption = "Best Model for Each Specification (Natural Spline DF)", digits = 1) %>% 
+  kable_styling(latex_options = "hold_position")
+
+best <- df_vec %>% filter(RMSE == min(df_vec$RMSE))
+PC1_df <- best[1, 2]
+PC2_df <- best[1, 3]
+PC3_df <- best[1, 4]
+DOW_df <- best[1, 5]
+Mth_df <- best[1, 6]
+
+```
+
+Based on these results, the final PCA model includes the first three components with the following natural spline degrees of freedom:
+
+* PC1: **`r PC1_df`**
+
+* PC2: **`r PC2_df`**
+
+* PC3: **`r PC3_df`**
+
+* Day of Week: **`r DOW_df`**
+
+* Month of Year: **`r Mth_df`**
+
+Regression output from the final model is displayed below.
+
+```{r PCA_Final, echo = FALSE}
+# Final PCA Model
+pca_final <- lm(cnt ~ ns(PC1, df = PC1_df) +
+                       ns(PC2, df = PC2_df) +
+                       ns(PC3, df = PC3_df) +
+                       ns(weekday, df = DOW_df) +
+                       ns(mnth, df = Mth_df) +
+                       weathersit + 
+                       yr + 
+                       poly(season, 2) +
+                       holiday
+                   , data = pca_train)
+
+# Print final model regression output
+pca_final %>% tidy() %>% kable(digits = 3)
+```
 
 ## Conclusions
 
 
 ### Performance on the Holdout Dataset
 
+```{r Holdout_RMSE, echo = FALSE}
+# Generate predictions and holdout RMSE for the PCA Model
+pca_pred <- predict(pca_final, newdata = pca_test) 
+pca_RMSE <- round(sqrt(mean((pca_pred - pca_test$cnt)^2)), 2)
+
+```
+
+The holdout dataset RMSE for the PCA model is **`r pca_RMSE`**.
+
 ### Commentary on Model Performance
 
-
+In the PCA model, the data reduction achieved was minimal, as three out of four principal components were present in the final model (the fourth PC not being considered for inclusion to enable at least some dimension reduction). The splines were able to model nonlinear effects in the components, however, and the holdout RMSE demonstrates a good test error for this model.
 
 ## Appendix
 
-```{r PCA_CV_Code, echo = FALSE, fig.width = 3.5, fig.height = 1.75, cache = TRUE}
+```{r appendix, eval = FALSE}
+library(tidyverse)
+library(caret)
+library(rsample)
+library(kableExtra)
+library(splines)
+library(cvTools)
+library(glmnet)
+library(fastDummies)
+library(ggrepel)
+library(Metrics)
+library(gridExtra)
+library(splines)
+
+# read in data
+day <- read_csv("day.csv")
+day <- day %>% select(-registered, -casual)
+
+# scale continuous variables
+day_scaled <- day %>% select(temp, atemp, hum, windspeed)
+day_scaled <- scale(day_scaled, center = TRUE, scale = TRUE)
+
+# create dummy variables for indicator variables
+dummyCols <- c('season', 'yr', 'mnth', 'weekday', 'weathersit')
+day_scaled <- dummy_cols(day, select_columns = dummyCols)
+#day_scaled <- day_scaled %>% select(-dummyCols) # remove original indicator vars
+
+# test train split
+set.seed(54321)
+index <- initial_split(day_scaled, prop = 0.75)
+train_set <- training(index)
+test_set <- testing(index)
+
+#### Create dataset with spline modified vars ####
+# create splines for humidity
+kn <- quantile(day_scaled$hum, probs = seq(.10, .90, by = .1)) # Define region boundaries 
+basis <- bs(day_scaled$hum,
+                degree = 3,
+                knots = kn) # Cubic splines basis functions
+df <- data.frame(basis)
+df <- df %>% rename_with( ~ paste0("hum_", .x))
+day_scaled_spline <- merge(day_scaled, df, by.x=0, by.y=0)
+day_scaled_spline <- day_scaled_spline %>% select(-c('Row.names', 'hum'))
+
+# create splines for windspeed
+kn <- quantile(day_scaled$windspeed, probs = seq(.10, .90, by = .1)) # Define region boundaries 
+basis <- bs(day_scaled$windspeed,
+                degree = 3,
+                knots = kn) # Cubic splines basis functions
+df <- data.frame(basis)
+df <- df %>% rename_with( ~ paste0("windspeed_", .x))
+day_scaled_spline <- merge(day_scaled_spline, df, by.x=0, by.y=0)
+day_scaled_spline <- day_scaled_spline %>% select(-c('Row.names', 'windspeed'))
+
+# test train split
+index <- initial_split(day_scaled_spline, prop = 0.75)
+train_set_spline <- training(index)
+test_set_spline <- testing(index)
+
+#Required: install remotes package 
+#install.packages("remotes")
+# install corrmorant from the github repository
+#remotes::install_github("r-link/corrmorant")
+
+#Check out the dataset
+head(day)
+dim(day)
+#Mapping the amount of cnt based on 4 seasons, coloring points by weather conditions
+ggplot(day,aes(cnt,season,color=weathersit)) + geom_point()
+
+library(corrmorant)
+ggcorrm(data = day[,c(3, 7:14)]) +
+  lotri(geom_point(alpha = 0.5)) +
+  utri_corrtext() +
+  dia_names(y_pos = 0.15, size = 3) +
+  dia_density(lower = 0.3, fill = "grey80", color = 1)
+
+humCnt <- ggplot(data=day) + 
+            geom_point(mapping=aes(x=hum, y=cnt)) +
+            ggtitle("Impact of Humidity on Bike Rentals") +
+            xlab("Normalized Humidity") + ylab("Count of Total Bike Rentals")
+windCnt <- ggplot(data=day) + 
+            geom_point(mapping=aes(x=windspeed, y=cnt)) +
+            ggtitle("Impact of Windspeed on Bike Rentals") +
+            xlab("Normalized Windspeed") + ylab("Count of Total Bike Rentals")
+grid.arrange(humCnt, windCnt, nrow=1)
+
+# create datastructures for tuning process
+y_train <- train_set$cnt
+X_train <- as.matrix(train_set %>% select(-c('cnt', 'dteday')))
+#X_train <- as.matrix(train_set[,-c(1:9)])
+
+# create grid of potential hyperparam values, train model for each value using 5-fold cv
+set.seed(54321)
+grid <- 2^seq(-6, 12, length = 100)
+cv_out1 <- cv.glmnet(x = X_train, y = y_train,
+                    type.measure='mse',
+                    nfolds = 5,
+                    alpha = 1,
+                    lambda = grid)
+
+# create plot to show how beta's are affected by tuning param
+## retreived from https://stackoverflow.com/questions/36656752/plotting-cv-glmnet-in-r
+betas = as.matrix(cv_out1$glmnet.fit$beta)
+lambdas1 = cv_out1$lambda
+names(lambdas1) = colnames(betas)
+coefPlot <- as.data.frame(betas) %>% 
+              tibble::rownames_to_column("variable") %>% 
+              pivot_longer(-variable) %>% 
+              mutate(lambda=lambdas1[name]) %>% 
+              ggplot(aes(x=lambda,y=value,col=variable)) + 
+              geom_line() + 
+              geom_label_repel(data=~subset(.x,lambda==min(lambda)),
+              aes(label=variable),nudge_x=-0.5) +
+              scale_x_log10()
+coefPlot
+
+# display the output of 5-fold cv for ridge regression comparing MSE to lambdas
+plot(cv_out1)
+
+# create datastructures for tuning process
+y_train_spline <- train_set_spline$cnt
+X_train_spline <- as.matrix(train_set_spline %>% select(-c('cnt', 'dteday')))
+
+# create grid of potential hyperparam values, train model for each value using 5-fold cv
+set.seed(54321)
+grid <- 10^seq(-4, 8, length = 100)
+cv_out3 <- cv.glmnet(x = X_train_spline, y = y_train_spline,
+                    type.measure='mse',
+                    nfolds = 5,
+                    alpha = 1,
+                    lambda = grid)
+
+plot(cv_out3)
+
+# evaluate performance of ridge regression model
+y_test <- test_set$cnt
+X_test <- as.matrix(test_set %>% select(-c('cnt', 'dteday')))
+pred1 <- predict(cv_out1, X_test)
+lassoReg <- c()
+lassoReg <- append(lassoReg, mean((pred1 - y_test)^2))       # mse
+lassoReg <- append(lassoReg, mean((mean(pred1) - y_test)^2)) # squared bias
+lassoReg <- append(lassoReg, mean((pred1 - mean(pred1))^2))   # variance
+
+# evaluate performance of ridge+spline regression model
+y_test <- test_set_spline$cnt
+X_test <- as.matrix(test_set_spline %>% select(-c('cnt', 'dteday')))
+pred3 <- predict(cv_out3, X_test)
+lassoSplineReg <- c()
+lassoSplineReg <- append(lassoSplineReg, mean((pred3 - y_test)^2))       # mse
+lassoSplineReg <- append(lassoSplineReg, mean((mean(pred3) - y_test)^2)) # squared bias
+lassoSplineReg <- append(lassoSplineReg, mean((pred3 - mean(pred3))^2))   # variance
+
+# print table
+results1 <- data.frame(lassoReg, lassoSplineReg, row.names = c('MSE', 'Squared-Bias', 'Variance'))
+kable(results1, 
+      caption = "Results of Lasso Regression Models on Test Dataset", 
+      digits = 3) %>% 
+        kable_styling(latex_options = "hold_position")
+
+# create datastructures for tuning process
+y_train <- train_set$cnt
+X_train <- as.matrix(train_set %>% select(-c('cnt', 'dteday')))
+
+# create grid of potential hyperparam values, train model for each value using 5-fold cv
+set.seed(54321)
+grid <- 10^seq(-2, 10, length = 100)
+cv_out <- cv.glmnet(x = X_train, y = y_train,
+                    type.measure='mse',
+                    nfolds = 5,
+                    alpha = 0,
+                    lambda = grid)
+
+# create plot to show how beta's are affected by tuning param
+## retreived from https://stackoverflow.com/questions/36656752/plotting-cv-glmnet-in-r
+betas = as.matrix(cv_out$glmnet.fit$beta)
+lambdas = cv_out$lambda
+names(lambdas) = colnames(betas)
+coefPlot <- as.data.frame(betas) %>% 
+              tibble::rownames_to_column("variable") %>% 
+              pivot_longer(-variable) %>% 
+              mutate(lambda=lambdas[name]) %>% 
+              ggplot(aes(x=lambda,y=value,col=variable)) + 
+              geom_line() + 
+              geom_label_repel(data=~subset(.x,lambda==min(lambda)),
+              aes(label=variable),nudge_x=-0.5) +
+              scale_x_log10()
+coefPlot
+
+plot(cv_out)
+
+# create datastructures for tuning process
+y_train_spline <- train_set_spline$cnt
+X_train_spline <- as.matrix(train_set_spline %>% select(-c('cnt', 'dteday')))
+
+# create grid of potential hyperparam values, train model for each value using 5-fold cv
+set.seed(54321)
+grid <- 10^seq(-2, 10, length = 100)
+cv_out2 <- cv.glmnet(x = X_train_spline, y = y_train_spline,
+                    type.measure='mse',
+                    nfolds = 5,
+                    alpha = 0,
+                    lambda = grid)
+
+plot(cv_out2)
+
+# evaluate performance of ridge regression model
+y_test <- test_set$cnt
+X_test <- as.matrix(test_set %>% select(-c('cnt', 'dteday')))
+pred <- predict(cv_out, X_test)
+ridgeReg <- c()
+ridgeReg <- append(ridgeReg, mean((pred - y_test)^2))       # mse
+ridgeReg <- append(ridgeReg, mean((mean(pred) - y_test)^2)) # squared bias
+ridgeReg <- append(ridgeReg, mean((pred - mean(pred))^2))   # variance
+
+# evaluate performance of ridge+spline regression model
+y_test <- test_set_spline$cnt
+X_test <- as.matrix(test_set_spline %>% select(-c('cnt', 'dteday')))
+pred <- predict(cv_out2, X_test)
+ridgeSplineReg <- c()
+ridgeSplineReg <- append(ridgeSplineReg, mean((pred - y_test)^2))       # mse
+ridgeSplineReg <- append(ridgeSplineReg, mean((mean(pred) - y_test)^2)) # squared bias
+ridgeSplineReg <- append(ridgeSplineReg, mean((pred - mean(pred))^2))   # variance
+
+# print table
+results <- data.frame(ridgeReg, ridgeSplineReg, row.names = c('MSE', 'Squared-Bias', 'Variance'))
+kable(results, 
+      caption = "Results of Ridge Regression Models on Test Dataset", 
+      digits = 3) %>% 
+        kable_styling(latex_options = "hold_position")
+
+# Run PCA on the continuous variables
+Xstd <- train_set %>% select(temp, atemp, hum, windspeed)
+pc_out <- prcomp(Xstd)
+
+# Extend PCA to test set for holdout analysis
+Xstd_test <- predict(pc_out, test_set)
+pca_test <- cbind(test_set, Xstd_test) %>% select(-temp, -atemp, -hum, -windspeed)
+
+# Create table to display variation
+names(pc_out)
+Z <- pc_out$x
+PC_var <-c(var(Z[,1]) / 4, var(Z[,2]) / 4, var(Z[,3]) / 4, var(Z[,4]) / 4)
+PC_table <- data.frame(Component = c(1:4), Variance = PC_var)
+PC_table <- PC_table %>% mutate(Cum_Variance = cumsum(Variance))
+kable(PC_table, caption = "Proportion of Total Variance of Individual Components", digits = 3) %>% kable_styling(latex_options = "hold_position")
+
+pca_train <- cbind(train_set, data.frame(Z)) %>% select(-temp, -atemp, -hum, -windspeed)
+ggplot(data = pca_train, aes(x = PC1, y = cnt)) + geom_point(color = "steelblue", size = 0.25) + 
+  labs(title = "Scatterplot of Response and PC1", y = "Count of Bike Users", x = "PC1")
+ggplot(data = pca_train, aes(x = PC2, y = cnt)) + geom_point(color = "steelblue", size = 0.25) + 
+  labs(title = "Scatterplot of Response and PC2", y = "Count of Bike Users", x = "PC2")
+ggplot(data = pca_train, aes(x = PC3, y = cnt)) + geom_point(color = "steelblue", size = 0.25) + 
+  labs(title = "Scatterplot of Response and PC3", y = "Count of Bike Users", x = "PC3")
+ggplot(data = pca_train, aes(x = PC4, y = cnt)) + geom_point(color = "steelblue", size = 0.25) + 
+  labs(title = "Scatterplot of Response and PC4", y = "Count of Bike Users", x = "PC4")
+
 PC1_df <- c(rep(2, 625), rep(4, 625), rep(6, 625), rep(8, 625), rep(10, 625))
 PC2_df <- c(rep(2, 125), rep(4, 125), rep(6, 125), rep(8, 125), rep(10, 125))
 PC3_df <- c(rep(2,  25), rep(4,  25), rep(6,  25), rep(8,  25), rep(10,  25))
