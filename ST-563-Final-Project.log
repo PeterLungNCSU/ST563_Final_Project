@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2022/dev) (preloaded format=pdflatex 2021.10.6)  1 DEC 2021 16:51
+This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2022/dev) (preloaded format=pdflatex 2021.10.6)  2 DEC 2021 15:32
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -673,7 +673,7 @@ Package pdftex.def Info: ST-563-Final-Project_files/figure-latex/unnamed-chunk-
 3-1.pdf  used on input line 250.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 264--265
+Underfull \hbox (badness 10000) in paragraph at lines 265--266
 
  []
 
@@ -681,36 +681,39 @@ Underfull \hbox (badness 10000) in paragraph at lines 264--265
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.270 
-       <./ST-563-Final-Project_files/figure-latex/unnamed-chunk-1-1.pdf>] [4pdf
-TeX warning (ext4): destination with the same identifier (name{figure.2}) has b
-een already used, duplicate ignored
+l.267 S
+       ome predictors exhibit non-linear relationships with the response <./ST-
+563-Final-Project_files/figure-latex/unnamed-chunk-1-1.pdf>] [4pdfTeX warning (
+ext4): destination with the same identifier (name{figure.2}) has been already u
+sed, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.270 
-      pdfTeX warning (ext4): destination with the same identifier (name{figure.
-3}) has been already used, duplicate ignored
+l.267 S
+       ome predictors exhibit non-linear relationships with the responsepdfTeX 
+warning (ext4): destination with the same identifier (name{figure.3}) has been 
+already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.270 
-       <./ST-563-Final-Project_files/figure-latex/unnamed-chunk-2-1.pdf> <./ST-
-563-Final-Project_files/figure-latex/unnamed-chunk-3-1.pdf>]
+l.267 S
+       ome predictors exhibit non-linear relationships with the response <./ST-
+563-Final-Project_files/figure-latex/unnamed-chunk-2-1.pdf> <./ST-563-Final-Pro
+ject_files/figure-latex/unnamed-chunk-3-1.pdf>]
 <ST-563-Final-Project_files/figure-latex/edaSpline-1.pdf, id=188, 578.16pt x 28
 9.08pt>
 File: ST-563-Final-Project_files/figure-latex/edaSpline-1.pdf Graphic file (typ
 e pdf)
 <use ST-563-Final-Project_files/figure-latex/edaSpline-1.pdf>
 Package pdftex.def Info: ST-563-Final-Project_files/figure-latex/edaSpline-1.pd
-f  used on input line 282.
+f  used on input line 283.
 (pdftex.def)             Requested size: 469.75385pt x 234.8769pt.
 [5pdfTeX warning (ext4): destination with the same identifier (name{figure.4}) 
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.289 \newpage
+l.290 \newpage
                <./ST-563-Final-Project_files/figure-latex/edaSpline-1.pdf>]
 LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 3
-18.
+19.
 (/Users/williamshaw/Library/TinyTeX/texmf-dist/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
@@ -720,7 +723,7 @@ File: ST-563-Final-Project_files/figure-latex/ridgeReg1-1.pdf Graphic file (typ
 e pdf)
 <use ST-563-Final-Project_files/figure-latex/ridgeReg1-1.pdf>
 Package pdftex.def Info: ST-563-Final-Project_files/figure-latex/ridgeReg1-1.pd
-f  used on input line 331.
+f  used on input line 332.
 (pdftex.def)             Requested size: 469.75385pt x 234.8769pt.
 <ST-563-Final-Project_files/figure-latex/ridgeReg2-1.pdf, id=207, 578.16pt x 21
 6.81pt>
@@ -728,13 +731,13 @@ File: ST-563-Final-Project_files/figure-latex/ridgeReg2-1.pdf Graphic file (typ
 e pdf)
 <use ST-563-Final-Project_files/figure-latex/ridgeReg2-1.pdf>
 Package pdftex.def Info: ST-563-Final-Project_files/figure-latex/ridgeReg2-1.pd
-f  used on input line 345.
+f  used on input line 346.
 (pdftex.def)             Requested size: 469.75385pt x 176.15768pt.
 [6pdfTeX warning (ext4): destination with the same identifier (name{figure.5}) 
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.347 \end{figure}
+l.348 \end{figure}
                    <./ST-563-Final-Project_files/figure-latex/ridgeReg1-1.pdf>]
 <ST-563-Final-Project_files/figure-latex/ridgeReg3-1.pdf, id=222, 578.16pt x 21
 6.81pt>
@@ -742,7 +745,7 @@ File: ST-563-Final-Project_files/figure-latex/ridgeReg3-1.pdf Graphic file (typ
 e pdf)
 <use ST-563-Final-Project_files/figure-latex/ridgeReg3-1.pdf>
 Package pdftex.def Info: ST-563-Final-Project_files/figure-latex/ridgeReg3-1.pd
-f  used on input line 367.
+f  used on input line 368.
 (pdftex.def)             Requested size: 469.75385pt x 176.15768pt.
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
@@ -751,19 +754,19 @@ LaTeX Warning: `!h' float specifier changed to `!ht'.
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.400 \newpage
+l.401 \newpage
               pdfTeX warning (ext4): destination with the same identifier (name
 {figure.7}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.400 \newpage
+l.401 \newpage
                <./ST-563-Final-Project_files/figure-latex/ridgeReg2-1.pdf> <./S
 T-563-Final-Project_files/figure-latex/ridgeReg3-1.pdf>] [8pdfTeX warning (ext4
 ): destination with the same identifier (name{table.1}) has been already used, 
 duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.400 \newpage
+l.401 \newpage
               ]
 <ST-563-Final-Project_files/figure-latex/lassoReg1-1.pdf, id=249, 578.16pt x 28
 9.08pt>
@@ -771,7 +774,7 @@ File: ST-563-Final-Project_files/figure-latex/lassoReg1-1.pdf Graphic file (typ
 e pdf)
 <use ST-563-Final-Project_files/figure-latex/lassoReg1-1.pdf>
 Package pdftex.def Info: ST-563-Final-Project_files/figure-latex/lassoReg1-1.pd
-f  used on input line 432.
+f  used on input line 433.
 (pdftex.def)             Requested size: 469.75385pt x 234.8769pt.
 <ST-563-Final-Project_files/figure-latex/lassoReg2-1.pdf, id=250, 578.16pt x 28
 9.08pt>
@@ -779,7 +782,7 @@ File: ST-563-Final-Project_files/figure-latex/lassoReg2-1.pdf Graphic file (typ
 e pdf)
 <use ST-563-Final-Project_files/figure-latex/lassoReg2-1.pdf>
 Package pdftex.def Info: ST-563-Final-Project_files/figure-latex/lassoReg2-1.pd
-f  used on input line 442.
+f  used on input line 443.
 (pdftex.def)             Requested size: 469.75385pt x 234.8769pt.
 <ST-563-Final-Project_files/figure-latex/lassoReg3-1.pdf, id=251, 578.16pt x 28
 9.08pt>
@@ -787,34 +790,34 @@ File: ST-563-Final-Project_files/figure-latex/lassoReg3-1.pdf Graphic file (typ
 e pdf)
 <use ST-563-Final-Project_files/figure-latex/lassoReg3-1.pdf>
 Package pdftex.def Info: ST-563-Final-Project_files/figure-latex/lassoReg3-1.pd
-f  used on input line 460.
+f  used on input line 462.
 (pdftex.def)             Requested size: 469.75385pt x 234.8769pt.
 [9pdfTeX warning (ext4): destination with the same identifier (name{figure.8}) 
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.488 \end{table}
+l.490 \end{table}
                   <./ST-563-Final-Project_files/figure-latex/lassoReg1-1.pdf>] 
 [10pdfTeX warning (ext4): destination with the same identifier (name{figure.9})
  has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.488 \end{table}
+l.490 \end{table}
                  pdfTeX warning (ext4): destination with the same identifier (n
 ame{figure.10}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.488 \end{table}
+l.490 \end{table}
                   <./ST-563-Final-Project_files/figure-latex/lassoReg2-1.pdf> <
 ./ST-563-Final-Project_files/figure-latex/lassoReg3-1.pdf>] [11pdfTeX warning (
 ext4): destination with the same identifier (name{table.2}) has been already us
 ed, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.493 \newpage
+l.495 \newpage
               ]
 LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 5
-13.
+15.
 (/Users/williamshaw/Library/TinyTeX/texmf-dist/tex/latex/lm/ts1lmr.fd
 File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
@@ -824,7 +827,7 @@ File: ST-563-Final-Project_files/figure-latex/PCA_scatter-1.pdf Graphic file (t
 ype pdf)
 <use ST-563-Final-Project_files/figure-latex/PCA_scatter-1.pdf>
 Package pdftex.def Info: ST-563-Final-Project_files/figure-latex/PCA_scatter-1.
-pdf  used on input line 583.
+pdf  used on input line 585.
 (pdftex.def)             Requested size: 252.94823pt x 126.4741pt.
 <ST-563-Final-Project_files/figure-latex/PCA_scatter-2.pdf, id=291, 252.945pt x
  126.4725pt>
@@ -832,7 +835,7 @@ File: ST-563-Final-Project_files/figure-latex/PCA_scatter-2.pdf Graphic file (t
 ype pdf)
 <use ST-563-Final-Project_files/figure-latex/PCA_scatter-2.pdf>
 Package pdftex.def Info: ST-563-Final-Project_files/figure-latex/PCA_scatter-2.
-pdf  used on input line 584.
+pdf  used on input line 586.
 (pdftex.def)             Requested size: 252.94823pt x 126.4741pt.
 <ST-563-Final-Project_files/figure-latex/PCA_scatter-3.pdf, id=292, 252.945pt x
  126.4725pt>
@@ -840,7 +843,7 @@ File: ST-563-Final-Project_files/figure-latex/PCA_scatter-3.pdf Graphic file (t
 ype pdf)
 <use ST-563-Final-Project_files/figure-latex/PCA_scatter-3.pdf>
 Package pdftex.def Info: ST-563-Final-Project_files/figure-latex/PCA_scatter-3.
-pdf  used on input line 585.
+pdf  used on input line 587.
 (pdftex.def)             Requested size: 252.94823pt x 126.4741pt.
 <ST-563-Final-Project_files/figure-latex/PCA_scatter-4.pdf, id=293, 252.945pt x
  126.4725pt>
@@ -848,15 +851,15 @@ File: ST-563-Final-Project_files/figure-latex/PCA_scatter-4.pdf Graphic file (t
 ype pdf)
 <use ST-563-Final-Project_files/figure-latex/PCA_scatter-4.pdf>
 Package pdftex.def Info: ST-563-Final-Project_files/figure-latex/PCA_scatter-4.
-pdf  used on input line 586.
+pdf  used on input line 588.
 (pdftex.def)             Requested size: 252.94823pt x 126.4741pt.
 
-Overfull \hbox (38.36365pt too wide) in paragraph at lines 583--587
+Overfull \hbox (38.36365pt too wide) in paragraph at lines 585--589
 [][] []
  []
 
 
-Overfull \hbox (38.36365pt too wide) in paragraph at lines 583--587
+Overfull \hbox (38.36365pt too wide) in paragraph at lines 585--589
 [] [] 
  []
 
@@ -864,7 +867,7 @@ Overfull \hbox (38.36365pt too wide) in paragraph at lines 583--587
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.587 
+l.589 
       ] [13 <./ST-563-Final-Project_files/figure-latex/PCA_scatter-1.pdf> <./ST
 -563-Final-Project_files/figure-latex/PCA_scatter-2.pdf> <./ST-563-Final-Projec
 t_files/figure-latex/PCA_scatter-3.pdf> <./ST-563-Final-Project_files/figure-la
@@ -872,192 +875,88 @@ tex/PCA_scatter-4.pdf>] [14pdfTeX warning (ext4): destination with the same ide
 ntifier (name{table.4}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.762 \end{table}
+l.764 \end{table}
                  ] [15pdfTeX warning (ext4): destination with the same identifi
 er (name{table.5}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.800 \newpage
+l.803 \newpage
               ]
 LaTeX Font Info:    Trying to load font information for TS1+lmtt on input line 
-829.
+832.
 (/Users/williamshaw/Library/TinyTeX/texmf-dist/tex/latex/lm/ts1lmtt.fd
 File: ts1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <10> not available
-(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 839.
+(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 842.
 
 LaTeX Font Warning: Font shape `T1/lmtt/bx/it' in size <10> not available
-(Font)              Font shape `T1/lmtt/b/sl' tried instead on input line 839.
+(Font)              Font shape `T1/lmtt/b/sl' tried instead on input line 842.
 
 [16]
-Underfull \vbox (badness 10000) detected at line 1183
+Underfull \vbox (badness 10000) detected at line 1271
  []
 
 
-Underfull \vbox (badness 10000) detected at line 1183
+Underfull \vbox (badness 10000) detected at line 1271
  []
 
 [17]
-Underfull \vbox (badness 10000) detected at line 1183
+Underfull \vbox (badness 10000) detected at line 1271
  []
 
 
-Underfull \vbox (badness 10000) detected at line 1183
+Underfull \vbox (badness 10000) detected at line 1271
  []
 
 [18]
-Underfull \vbox (badness 10000) detected at line 1183
+Underfull \vbox (badness 10000) detected at line 1271
  []
 
 
-Underfull \vbox (badness 10000) detected at line 1183
+Underfull \vbox (badness 10000) detected at line 1271
  []
 
 [19]
-Underfull \vbox (badness 10000) detected at line 1183
+Underfull \vbox (badness 10000) detected at line 1271
  []
 
 
-Underfull \vbox (badness 10000) detected at line 1183
+Underfull \vbox (badness 10000) detected at line 1271
  []
 
 [20]
-Underfull \vbox (badness 10000) detected at line 1183
+Underfull \vbox (badness 10000) detected at line 1271
  []
 
 
-Underfull \vbox (badness 10000) detected at line 1183
+Underfull \vbox (badness 10000) detected at line 1271
  []
 
 [21]
-Underfull \vbox (badness 10000) detected at line 1183
+Underfull \vbox (badness 10000) detected at line 1271
  []
 
 
-Underfull \vbox (badness 10000) detected at line 1183
+Underfull \vbox (badness 10000) detected at line 1271
  []
 
-[22] [23]
-Underfull \vbox (badness 10000) detected at line 2026
- []
-
-
-Underfull \vbox (badness 10000) detected at line 2026
- []
-
-[24]
-Underfull \vbox (badness 10000) detected at line 2026
+[22]
+Underfull \vbox (badness 10000) detected at line 1271
  []
 
 
-Underfull \vbox (badness 10000) detected at line 2026
+Underfull \vbox (badness 10000) detected at line 1271
  []
 
-[25]
-Underfull \vbox (badness 10000) detected at line 2026
- []
-
-
-Underfull \vbox (badness 10000) detected at line 2026
- []
-
-[26]
-Underfull \vbox (badness 10000) detected at line 2026
- []
-
-
-Underfull \vbox (badness 10000) detected at line 2026
- []
-
-[27]
-Underfull \vbox (badness 10000) detected at line 2026
- []
-
-
-Underfull \vbox (badness 10000) detected at line 2026
- []
-
-[28]
-Underfull \vbox (badness 10000) detected at line 2026
- []
-
-
-Underfull \vbox (badness 10000) detected at line 2026
- []
-
-[29]
-Underfull \vbox (badness 10000) detected at line 2026
- []
-
-
-Underfull \vbox (badness 10000) detected at line 2026
- []
-
-[30]
-Underfull \vbox (badness 10000) detected at line 2026
- []
-
-
-Underfull \vbox (badness 10000) detected at line 2026
- []
-
-[31]
-Underfull \vbox (badness 10000) detected at line 2026
- []
-
-
-Underfull \vbox (badness 10000) detected at line 2026
- []
-
-[32]
-Underfull \vbox (badness 10000) detected at line 2026
- []
-
-
-Underfull \vbox (badness 10000) detected at line 2026
- []
-
-[33]
-Underfull \vbox (badness 10000) detected at line 2026
- []
-
-
-Underfull \vbox (badness 10000) detected at line 2026
- []
-
-[34]
-Underfull \vbox (badness 10000) detected at line 2026
- []
-
-
-Underfull \vbox (badness 10000) detected at line 2026
- []
-
-[35]
-Underfull \vbox (badness 10000) detected at line 2026
- []
-
-
-Underfull \vbox (badness 10000) detected at line 2026
- []
-
-[36]
-Underfull \vbox (badness 10000) detected at line 2026
- []
-
-
-Underfull \vbox (badness 10000) detected at line 2026
- []
-
-[37] [38] (./ST-563-Final-Project.aux)
+[23] [24] [25] (./ST-563-Final-Project.aux)
 Package rerunfilecheck Info: File `ST-563-Final-Project.out' has not changed.
 (rerunfilecheck)             Checksum: 29D50B6ADCE426DF33F2C686A4080E0D;4323.
  ) 
 Here is how much of TeX's memory you used:
- 12703 strings out of 480559
- 190598 string characters out of 5902367
- 689929 words of memory out of 5000000
+ 12690 strings out of 480559
+ 190507 string characters out of 5902367
+ 598248 words of memory out of 5000000
  29950 multiletter control sequences out of 15000+600000
  455337 words of font info for 74 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
@@ -1086,10 +985,10 @@ fb></Users/williamshaw/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtko10
 .pfb></Users/williamshaw/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt1
 0.pfb></Users/williamshaw/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt
 i10.pfb>
-Output written on ST-563-Final-Project.pdf (38 pages, 1824807 bytes).
+Output written on ST-563-Final-Project.pdf (25 pages, 1802502 bytes).
 PDF statistics:
- 559 PDF objects out of 1000 (max. 8388607)
- 448 compressed objects within 5 object streams
- 107 named destinations out of 1000 (max. 500000)
+ 502 PDF objects out of 1000 (max. 8388607)
+ 404 compressed objects within 5 object streams
+ 94 named destinations out of 1000 (max. 500000)
  271 words of extra memory for PDF output out of 10000 (max. 10000000)
 
