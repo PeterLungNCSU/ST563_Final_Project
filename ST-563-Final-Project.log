@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2022/dev) (preloaded format=pdflatex 2021.10.6)  2 DEC 2021 15:32
+This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2022/dev) (preloaded format=pdflatex 2021.10.6)  2 DEC 2021 15:50
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -951,12 +951,12 @@ Underfull \vbox (badness 10000) detected at line 1271
 
 [23] [24] [25] (./ST-563-Final-Project.aux)
 Package rerunfilecheck Info: File `ST-563-Final-Project.out' has not changed.
-(rerunfilecheck)             Checksum: 29D50B6ADCE426DF33F2C686A4080E0D;4323.
+(rerunfilecheck)             Checksum: 9AA788EF0FB06328A8264AC94F2C4F53;4333.
  ) 
 Here is how much of TeX's memory you used:
  12690 strings out of 480559
- 190507 string characters out of 5902367
- 598248 words of memory out of 5000000
+ 190511 string characters out of 5902367
+ 598250 words of memory out of 5000000
  29950 multiletter control sequences out of 15000+600000
  455337 words of font info for 74 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
@@ -985,7 +985,7 @@ fb></Users/williamshaw/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtko10
 .pfb></Users/williamshaw/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt1
 0.pfb></Users/williamshaw/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt
 i10.pfb>
-Output written on ST-563-Final-Project.pdf (25 pages, 1802502 bytes).
+Output written on ST-563-Final-Project.pdf (25 pages, 1802481 bytes).
 PDF statistics:
  502 PDF objects out of 1000 (max. 8388607)
  404 compressed objects within 5 object streams

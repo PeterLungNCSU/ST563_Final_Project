@@ -425,7 +425,7 @@ Lasso regression without splines has a lower MSE, so we choose it as our final m
 
 
 \newpage
-### Principal Components Analysis
+### Principal Components Regression
 
 The third method we utilize for prediction is Principal Components Regression. PCR is an unsupervised dimension reduction technique which seeks to draw the maximum variation from each candidate variable into individual components. In this model, we will attempt to achieve minimum test error by selecting a subset of the data in the form of the first $k$ components. 
 
@@ -467,7 +467,7 @@ PC_table <- PC_table %>% mutate(Cum_Variance = cumsum(Variance))
 kable(PC_table, caption = "Proportion of Total Variance of Individual Components", digits = 3) %>% kable_styling(latex_options = "hold_position")
 ```
 
-As can be seen in table 3, 80% of the variation in the predictors is captured in the first two components and nearly all of the variation is captured in the first three. This is partially a result of the very strong correlation between temperature and ambient temperature. From this we can conclude that principal components will be effective at reducing the dimensionality of the data.
+As can be seen in table 3, 95% of the variation in the predictors is captured in the first two components and nearly all of the variation is captured in the first three. This is partially a result of the very strong correlation between temperature and ambient temperature. From this we can conclude that principal components will be effective at reducing the dimensionality of the data.
 
 Although the dimensionality of the data is successfully reduced, the relationship between the components and the response variable determine the overall quality of the model. The following scatterplots show the relationship between each component and the response in the training data:
 
@@ -693,7 +693,7 @@ Mth_df <- best[1, 6]
 
 ```
 
-Based on these results, the final PCA model includes the first three components with the following natural spline degrees of freedom:
+Based on these results, the final PCR model includes the first three components with the following natural spline degrees of freedom:
 
 * PC1: **`r PC1_df`**
 
@@ -741,7 +741,7 @@ results <- data.frame(sqrt(ridgeReg[1]),
                       sqrt(lassoReg[1]), 
                       sqrt(lassoSplineReg[1]), 
                       pca_RMSE, row.names = c('RMSE'))
-colnames(results) <- c('Ridge', 'Ridge+Spline', 'Lasso', 'Lasso+Spline', 'PCA')
+colnames(results) <- c('Ridge', 'Ridge+Spline', 'Lasso', 'Lasso+Spline', 'PCR')
 
 kable(results, 
       caption = "Results of Models on Test Dataset", 
@@ -749,17 +749,17 @@ kable(results,
         kable_styling(latex_options = "hold_position")
 ```
 
-The best performing model is PCA. Its RMSE on the holdout dataset is **`r pca_RMSE`**.
+The best performing model is PCR. Its RMSE on the holdout dataset is **`r pca_RMSE`**.
 
 ### Commentary on Model Performance
 
-In the PCA model, the data reduction achieved was minimal, as three out of four principal components were present in the final model (the fourth PC not being considered for inclusion to enable at least some dimension reduction). The splines were able to model nonlinear effects in the components, however, and the holdout RMSE demonstrates a good test error for this model.
+In the PCR model, the data reduction achieved was minimal, as three out of four principal components were present in the final model (the fourth PC not being considered for inclusion to enable at least some dimension reduction). The splines were able to model nonlinear effects in the components, however, and the holdout RMSE demonstrates a good test error for this model.
 
 Ridge and Lasso regression methods fell short of modeling non-linear variables. Additionally, when splines were incorporated into ridge/lasso, model performance grew worse. 
 
 ### Final Thoughts
 
-Moving forward, collecting additional data would be beneficial to the performance of lasso/ridge/pca techniques. The original dataset contains 14 variables (including the response variable). Of which, 7 variables are used to describe the date and 1 variable represents the row number in the dataset. In reality, this dataset provides 6 uniquely collected variables to predict the daily count of bike renters. Looking back, perhaps due to the limited number of variables to start with, shrinkage or dimension reduction methods may not have been appropriate as we already have a low dimension. 
+Moving forward, collecting additional data would be beneficial to the performance of lasso/ridge/PCR techniques. The original dataset contains 14 variables (including the response variable). Of which, 7 variables are used to describe the date and 1 variable represents the row number in the dataset. In reality, this dataset provides 6 uniquely collected variables to predict the daily count of bike renters. Looking back, perhaps due to the limited number of variables to start with, shrinkage or dimension reduction methods may not have been appropriate as we already have a low dimension. 
 
 Another idea to consider is the potential to fit a time-series model rather than a learning model. The dataset exhibits strong seasonal trends as well as an overall yearly increase in daily bike rentals. Given a longer range of data, perhaps the time-series model would outperform a machine learning model.
 
